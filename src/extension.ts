@@ -565,9 +565,11 @@ export function activate(extensionContext: vscode.ExtensionContext): void {
 		errorLensEnabled = !errorLensEnabled;
 
 		if (errorLensEnabled) {
-			updateEverything();
+            updateEverything();
+            window.showInformationMessage(`${EXTENSION_NAME} is now enabled!`)
 		} else {
-			disposeEverything();
+            disposeEverything();
+            window.showInformationMessage(`${EXTENSION_NAME} is now disabled!`)
 		}
 	});
 	const disposableToggleError = vscode.commands.registerCommand(`${EXTENSION_NAME}.toggleError`, () => {
