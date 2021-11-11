@@ -10,7 +10,6 @@
 		"npm": ">=7.0.0"
 	},
 	"extensionKind": [
-		"ui",
 		"workspace"
 	],
 	"categories": [
