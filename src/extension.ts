@@ -1,5 +1,5 @@
 import { registerAllCommands } from 'src/commands';
-import { CustomDelay } from 'src/CustomDelay';
+import { CacheAndCustomDelay } from 'src/CacheAndCustomDelay';
 import { setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { updateChangedActiveTextEditorListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateCursorChangeListener, updateOnSaveListener } from 'src/eventListeners';
 import { StatusBarIcons } from 'src/statusBarIcons';
@@ -68,9 +68,9 @@ export class Global {
 	 */
 	static lastSavedTimestamp = Date.now() + 2000;
 	/**
-	 * CustomDelay object. Handles updating decorations with a delay.
+	 * CacheAndCustomDelay object. Handles updating decorations with a delay.
 	 */
-	static customDelay: CustomDelay | undefined;
+	static cacheAndCustomDelay: CacheAndCustomDelay;
 	/**
 	 * Saved reference for vscode `ExtensionContext` for this extension.
 	 */
@@ -110,6 +110,7 @@ export function activate(extensionContext: ExtensionContext) {
  */
 export function updateEverything() {
 	updateExclude();
+	Global.cacheAndCustomDelay = new CacheAndCustomDelay();
 	Global.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled && $config.gutterIconsFollowCursorOverride && $config.followCursor !== 'allLines';
 	Global.statusBarMessage?.dispose();
 	Global.statusBarIcons?.dispose();

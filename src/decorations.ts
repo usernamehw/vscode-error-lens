@@ -222,17 +222,16 @@ export function setDecorationStyle() {
  * Actually apply decorations for editor.
  * @param range Only allow decorating lines in this range.
  */
-export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics, range?: Range) {
+export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: AggregatedByLineDiagnostics) {
 	const decorationOptionsError: DecorationOptions[] = [];
 	const decorationOptionsWarning: DecorationOptions[] = [];
 	const decorationOptionsInfo: DecorationOptions[] = [];
 	const decorationOptionsHint: DecorationOptions[] = [];
 
+	const range = editor.selection;
+
 	let allowedLineNumbersToRenderDiagnostics: number[] | undefined;
 	if ($config.followCursor === 'closestProblem') {
-		if (range === undefined) {
-			range = editor.selection;
-		}
 		const line = range.start.line;
 
 		const aggregatedDiagnosticsAsArray = Object.entries(aggregatedDiagnostics).sort((a, b) => Math.abs(line - Number(a[0])) - Math.abs(line - Number(b[0])));
@@ -262,27 +261,12 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 				case 3: decorationRenderOptions = Global.decorationRenderOptionsHint; break;
 			}
 
-			const message = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
-
-			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
-				...decorationRenderOptions,
-				after: {
-					...decorationRenderOptions.after || {},
-					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
-					contentText: $config.messageEnabled ?
-						truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
-				},
-			};
-
 			let messageRange: Range | undefined;
 			if ($config.followCursor === 'allLines') {
 				// Default value (most used)
 				messageRange = diagnostic.range;
 			} else {
 				// Others require cursor tracking
-				if (range === undefined) {
-					range = editor.selection;
-				}
 				const diagnosticRange = diagnostic.range;
 
 				if ($config.followCursor === 'activeLine') {
@@ -314,6 +298,18 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 				}
 			}
 
+			const message = diagnosticToInlineMessage($config.messageTemplate, diagnostic, aggregatedDiagnostic.length);
+
+			const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
+				...decorationRenderOptions,
+				after: {
+					...decorationRenderOptions.after || {},
+					// If the message has thousands of characters - VSCode will render all of them offscreen and the editor will freeze.
+					contentText: $config.messageEnabled ?
+						truncateString($config.removeLinebreaks ? replaceLinebreaks(message) : message) : '',
+				},
+			};
+
 			const diagnosticDecorationOptions: DecorationOptions = {
 				range: messageRange,
 				renderOptions: decInstanceRenderOptions,
@@ -340,14 +336,12 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 }
 
 export function updateDecorationsForAllVisibleEditors() {
-	for (const editor of window.visibleTextEditors) {
-		updateDecorationsForUri(editor.document.uri, editor);
-	}
+	Global.cacheAndCustomDelay.updateDecorationsAllVisibleEditors();
 }
 /**
  * Update decorations for one editor.
  */
-export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor, range?: Range) {
+export function updateDecorationsForUri(editor?: TextEditor) {
 	if (editor === undefined) {
 		editor = window.activeTextEditor;
 	}
@@ -355,62 +349,9 @@ export function updateDecorationsForUri(uriToDecorate: Uri, editor?: TextEditor,
 		return;
 	}
 
-	if (!editor.document.uri.fsPath) {
-		return;
-	}
-
-	if (!$config.enableOnDiffView && editor.viewColumn === undefined) {
-		return;
-	}
-
-	if (Global.excludePatterns) {
-		for (const pattern of Global.excludePatterns) {
-			if (languages.match(pattern, editor.document) !== 0) {
-				return;
-			}
-		}
-	}
-
-	doUpdateDecorations(editor, getDiagnosticAndGroupByLine(uriToDecorate), range);
+	Global.cacheAndCustomDelay.updateDecorations(editor);
 }
 
-/**
- * The aggregatedDiagnostics object will contain one or more objects, each object being keyed by `N`, where `N` is the line number where one or more diagnostics are being reported.
- *
- * Each object which is keyed by `N` will contain one or more `arrayDiagnostics[]` array of objects.
- * This facilitates gathering info about lines which contain more than one diagnostic.
- *
- * ```json
- * {
- *   67: [
- *     <Diagnostic #1>,
- *     <Diagnostic #2>
- *   ],
- *   93: [
- *     <Diagnostic #1>
- *   ]
- * }
- * ```
- */
-export function getDiagnosticAndGroupByLine(uri: Uri): AggregatedByLineDiagnostics {
-	const aggregatedDiagnostics: AggregatedByLineDiagnostics = Object.create(null);
-	const diagnostics = languages.getDiagnostics(uri);
-
-	for (const diagnostic of diagnostics) {
-		if (shouldExcludeDiagnostic(diagnostic)) {
-			continue;
-		}
-
-		const key = diagnostic.range.start.line;
-
-		if (aggregatedDiagnostics[key]) {
-			aggregatedDiagnostics[key].push(diagnostic);
-		} else {
-			aggregatedDiagnostics[key] = [diagnostic];
-		}
-	}
-	return aggregatedDiagnostics;
-}
 /**
  * Check multiple exclude sources if the diagnostic should not be shown.
  */
