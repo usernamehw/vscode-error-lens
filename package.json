@@ -355,6 +355,14 @@
 					},
 					"markdownDescription": "Exclude files by using glob pattern. Example `[\"**/*.{ts,js}\"]`"
 				},
+				"errorLens.excludeWorkspaces": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"type": "string"
+					},
+					"markdownDescription": "Exclude workspaces by workspace path"
+				},
 				"errorLens.light": {
 					"type": "object",
 					"description": "Specify color of decorations for when the light color theme is active.",

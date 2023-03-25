@@ -2,7 +2,7 @@ import { $config, Global } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles } from 'src/gutter';
 import { AggregatedByLineDiagnostics, Constants } from 'src/types';
 import { replaceLinebreaks, truncateString } from 'src/utils';
-import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, ExtensionContext, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window } from 'vscode';
+import { DecorationInstanceRenderOptions, DecorationOptions, DecorationRenderOptions, Diagnostic, ExtensionContext, languages, Range, TextEditor, ThemableDecorationAttachmentRenderOptions, ThemeColor, Uri, window, workspace } from 'vscode';
 
 /**
  * Update all decoration styles: editor, gutter, status bar
@@ -337,6 +337,12 @@ export function doUpdateDecorations(editor: TextEditor, aggregatedDiagnostics: A
 
 export function updateDecorationsForAllVisibleEditors() {
 	for (const editor of window.visibleTextEditors) {
+		const excludeWorkspaces = $config.excludeWorkspaces;
+		const currentWorkspacePath = workspace.getWorkspaceFolder(editor.document.uri)?.uri.path;
+		if (currentWorkspacePath && excludeWorkspaces.includes(currentWorkspacePath)) {
+			continue;
+		}
+
 		updateDecorationsForUri(editor.document.uri, editor);
 	}
 }

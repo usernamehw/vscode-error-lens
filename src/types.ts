@@ -214,6 +214,11 @@ interface ExtensionConfigType {
 		warningGutterIconColor: string;
 		infoGutterIconColor: string;
 	};
+
+	/**
+	 * Disable highlighting for selected workspaces
+	 */
+	excludeWorkspaces: string[];
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
