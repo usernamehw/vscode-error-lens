@@ -41,7 +41,8 @@
 		"onCommand:errorLens.toggleWarning",
 		"onCommand:errorLens.toggleInfo",
 		"onCommand:errorLens.toggleHint",
-		"onCommand:errorLens.copyProblemMessage"
+		"onCommand:errorLens.copyProblemMessage",
+		"onCommand:errorLens.toggleWorkspace"
 	],
 	"main": "./dist/extension.js",
 	"browser": "./dist/extension.js",
