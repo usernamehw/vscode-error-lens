@@ -1,5 +1,6 @@
 import { ExtensionConfig } from 'src/types';
-import { ConfigurationTarget, workspace } from 'vscode';
+import { ConfigurationTarget, window, workspace } from 'vscode';
+import { $config } from './extension';
 
 /**
  * Update global settings.json file with the new settign value.
@@ -23,4 +24,29 @@ export function toggleEnabledLevels(
 		arrayValue.push(severity);
 	}
 	updateGlobalSetting('errorLens.enabledDiagnosticLevels', arrayValue);
+}
+
+export function toggleWorkspace(): void {
+	const activeEditor = window.activeTextEditor;
+	const config = $config;
+
+	if (!activeEditor) {
+		return;
+	}
+
+	const currentWorkspacePath = workspace.getWorkspaceFolder(activeEditor.document.uri)?.uri.path;
+
+	if (!currentWorkspacePath) {
+		return;
+	}
+
+	let newExcludeWorkspaceList: string[];
+
+	if (config.excludeWorkspaces?.includes(currentWorkspacePath)) {
+		newExcludeWorkspaceList = config.excludeWorkspaces.filter(workspacePath => workspacePath !== currentWorkspacePath);
+	} else {
+		newExcludeWorkspaceList = [...(config.excludeWorkspaces || []), currentWorkspacePath];
+	}
+
+	updateGlobalSetting('errorLens.excludeWorkspaces', newExcludeWorkspaceList);
 }

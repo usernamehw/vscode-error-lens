@@ -248,6 +248,7 @@ export const enum CommandId {
 	toggleWarning = 'errorLens.toggleWarning',
 	toggleInfo = 'errorLens.toggleInfo',
 	toggleHint = 'errorLens.toggleHint',
+	toggleWorkspace = 'errorlens.toggleWorkspace',
 	copyProblemMessage = 'errorLens.copyProblemMessage',
 	statusBarCommand = 'errorLens.statusBarCommand',
 	revealLine = 'errorLens.revealLine',

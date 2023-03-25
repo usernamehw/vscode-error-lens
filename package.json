@@ -82,6 +82,12 @@
 				"title": "Copy Problem Message",
 				"description": "Copy problem message to the clipboard (at the active cursor).",
 				"category": "Error Lens"
+			},
+			{
+				"command": "errorlens.toggleWorkspace",
+				"title": "Toggle Workspace in Disabled List",
+				"description": "Exclude/Include current workspace from Error Lens",
+				"category": "Error Lens"
 			}
 		],
 		"configuration": {

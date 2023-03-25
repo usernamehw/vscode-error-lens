@@ -1,5 +1,5 @@
 import { $config, Global } from 'src/extension';
-import { toggleEnabledLevels, updateGlobalSetting } from 'src/settings';
+import { toggleEnabledLevels, toggleWorkspace, updateGlobalSetting } from 'src/settings';
 import { AggregatedByLineDiagnostics, CommandId, Constants } from 'src/types';
 import { commands, env, ExtensionContext, languages, Range, Selection, TextEditorRevealType, window, workspace } from 'vscode';
 
@@ -21,6 +21,9 @@ export function registerAllCommands(extensionContext: ExtensionContext) {
 	});
 	const disposableToggleHint = commands.registerCommand(CommandId.toggleHint, () => {
 		toggleEnabledLevels('hint', $config.enabledDiagnosticLevels);
+	});
+	const disposableToggleWorkspace = commands.registerCommand(CommandId.toggleWorkspace, () => {
+		toggleWorkspace();
 	});
 
 	const disposableCopyProblemMessage = commands.registerTextEditorCommand(CommandId.copyProblemMessage, editor => {
