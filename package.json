@@ -295,7 +295,7 @@
 				"errorLens.messageEnabled": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls whether inline message is shown or not (Including background highlight)."
+					"description": "Controls whether inline message is shown or not (Including backgrounpmd highlight)."
 				},
 				"errorLens.messageBackgroundMode": {
 					"type": "string",
@@ -900,6 +900,11 @@
 						}
 					},
 					"additionalProperties": false
+				},
+				"errorLens.ignoreUntitled": {
+					"type": "boolean",
+					"default": true,
+					"description": "Controls whether to run on untitled (unsaved) files."
 				}
 			}
 		},

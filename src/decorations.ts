@@ -555,6 +555,10 @@ export function updateDecorationsForUri({
 		return;
 	}
 
+	if ($config.ignoreUntitled && editor.document.uri.scheme === 'untitled') {
+		return;
+	}
+
 	if (
 		(!$config.enableOnDiffView && editor.viewColumn === undefined) &&
 		editor.document.uri.scheme !== 'vscode-notebook-cell'

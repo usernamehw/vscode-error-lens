@@ -322,6 +322,10 @@ interface ExtensionConfigType {
 	 * Advanced decoration tweaking.
 	 */
 	decorations: Record<'errorMessage' | 'errorRange' | 'hintMessage' | 'hintRange' | 'infoMessage' | 'infoRange' | 'warningMessage' | 'warningRange', DecorationRenderOptions>;
+	/**
+	 * Controls whether to run on untitled (unsaved) files.
+	 */
+	ignoreUntitled: boolean;
 }
 
 export type ExtensionConfig = Readonly<ExtensionConfigType>;
