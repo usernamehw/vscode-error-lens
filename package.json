@@ -295,7 +295,7 @@
 				"errorLens.messageEnabled": {
 					"type": "boolean",
 					"default": true,
-					"description": "Controls whether inline message is shown or not (Including backgrounpmd highlight)."
+					"description": "Controls whether inline message is shown or not (Including background highlight)."
 				},
 				"errorLens.messageBackgroundMode": {
 					"type": "string",
