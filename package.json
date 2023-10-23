@@ -903,7 +903,7 @@
 				},
 				"errorLens.ignoreUntitled": {
 					"type": "boolean",
-					"default": true,
+					"default": false,
 					"description": "Controls whether to run on untitled (unsaved) files."
 				}
 			}
