@@ -1216,6 +1216,7 @@
 		]
 	},
 	"scripts": {
+		"lint": "eslint . --ext .ts",
 		"vscode:prepublish": "webpack --mode production --color --devtool hidden-source-map",
 		"watch": "webpack --mode development --watch --stats minimal"
 	},
