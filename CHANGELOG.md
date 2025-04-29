@@ -1,3 +1,9 @@
+## 3.26.0 `29 Apr 2025`
+
+- 🔨 Deprecate `"errorLens.exclude"` setting in favor of `"errorLens.excludeByMessage"`.
+
+`"errorLens.exclude"` was transforming every string into a Regular Expression which is bad for performance and can lead to an Extension Host crash (`Extension causes high cpu load`). New setting `"errorLens.excludeByMessage"` matches strings by default(case-insensitive), but can use Regular Expressions too (use object instead of a string).
+
 ## 3.25.0 `01 Apr 2025`
 
 - ✨ Configure inline message border `"errorLens.border"` [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensborder)
