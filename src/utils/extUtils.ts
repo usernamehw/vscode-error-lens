@@ -143,22 +143,37 @@ export const extUtils = {
 						diagnosticCode = String(diagnostic.code.value);
 					}
 					if (!excludeSourceCode.code) {
-					// only source exclusion
+						// only source exclusion
 						return true;
 					}
 					if (excludeSourceCode.code && diagnosticCode && excludeSourceCode.code === diagnosticCode) {
-					// source and code matches
+						// source and code matches
 						return true;
 					}
 				}
 			}
 		}
 
-		for (const regex of $state.excludeRegexp) {
-			if (regex.test(diagnostic.message)) {
+		// ──── Exclude by message (deprecated) ───────────────────────
+		for (const regexp of $state.excludeRegexp) {
+			if (regexp.test(diagnostic.message)) {
 				return true;
 			}
 		}
+
+		// ──── New exclude by message ────────────────────────────────
+		const diagnosticMessageLowercased = diagnostic.message.toLocaleLowerCase();
+		for (const string of $state.excludeByMessage.strings) {
+			if (diagnosticMessageLowercased.includes(string)) {
+				return true;
+			}
+		}
+		for (const regexp of $state.excludeByMessage.regexps) {
+			if (regexp.test(diagnostic.message)) {
+				return true;
+			}
+		}
+		// ────────────────────────────────────────────────────────────
 
 		return false;
 	},
@@ -222,7 +237,7 @@ export const extUtils = {
 	 * Generate inline message from template.
 	 */
 	diagnosticToInlineMessage(template: string, diagnostic: Diagnostic, count: number): string {
-	/** Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings. */
+		/** Variables to replace inside the `messageTemplate` & `statusBarMessageTemplate` settings. */
 		const enum TemplateVars {
 			Message = '$message',
 			Source = '$source',
@@ -239,9 +254,9 @@ export const extUtils = {
 		}
 
 		if ($state.replaceRegexp) {
-		// Apply transformations sequentially, checking at each stage if the updated
-		// message matches the next checker. Usuaully there would only be one match,
-		// but this ensures individual matchers can transform parts in sequence.
+			// Apply transformations sequentially, checking at each stage if the updated
+			// message matches the next checker. Usuaully there would only be one match,
+			// but this ensures individual matchers can transform parts in sequence.
 			for (const transformation of $state.replaceRegexp) {
 				const matchResult = transformation.matcher.exec(message);
 				if (matchResult) {
@@ -256,10 +271,10 @@ export const extUtils = {
 		}
 
 		if (template === TemplateVars.Message) {
-		// When default template - no need to use RegExps or other stuff.
+			// When default template - no need to use RegExps or other stuff.
 			return message;
 		} else {
-		// Message & severity is always present.
+			// Message & severity is always present.
 			let result = template
 				.replace(TemplateVars.Message, message)
 				.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '')
@@ -397,7 +412,7 @@ export const extUtils = {
 		if (indentStyle === 'spaces') {
 			return textLine.range.end.character;
 		} else {
-		/** `firstNonWhitespaceCharacterIndex` can include whitespaces, only tabs are needed to correctly get visual indent here */
+			/** `firstNonWhitespaceCharacterIndex` can include whitespaces, only tabs are needed to correctly get visual indent here */
 			const onlyTabsIndent = textLine.text.slice(0, textLine.firstNonWhitespaceCharacterIndex).replace(/[^\t]/gu, '');
 			const thisLineIndentSize = onlyTabsIndent.length;
 			const textWithoutIndent = textLine.text.slice(thisLineIndentSize);

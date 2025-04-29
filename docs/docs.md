@@ -17,7 +17,7 @@
 
 ### If you don't want to go with the hotkey route - it's possible to:
 
-1) Exclude problems (in workspace, by source, by code, by message) [**exclude**](#errorlensexclude), [**excludeBySource**](#errorlensexcludebysource), [**excludePatterns(Glob)**](#errorlensexcludepatterns), [excludeWorkspaces](#errorlensexcludeworkspaces)
+1) Exclude problems (in workspace, by source, by code, by message) [**excludeByMessage**](#errorlensexcludebymessage), [**excludeBySource**](#errorlensexcludebysource), [**excludePatterns(Glob)**](#errorlensexcludepatterns), [**excludeWorkspaces**](#errorlensexcludeworkspaces)
 1) Show fewer decorations (render decoration only on the active line) [**followCursor**](#errorlensfollowcursor)
 1) Delay showing decorations (delay ms / on document save) [**delay**](#errorlensdelay), [**onSave**](#errorlensonsave), [**ignoreDirty**](#errorlensignoredirty)
 1) Transform problem message (make it shorter maybe) [**replace**](#errorlensreplace)
@@ -26,7 +26,7 @@
 ### 1. Exclude problems:
 
 ```js
-"errorLens.exclude": [
+"errorLens.excludeByMessage": [
     "Missing semicolon",
     "Newline required at end of file but not found",
     "More than 1 blank line not allowed",
@@ -1055,7 +1055,23 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 
 ### `errorLens.exclude`
 
+> ❗Deprecated. Use [errorLens.excludeByMessage](#errorlensexcludebymessage).
+
 Exclude diagnostics by message. Uses strings to create RegExp with `iu` flags.
+
+### `errorLens.excludeByMessage`
+
+Exclude diagnostics by message. Excludes when the diagnostic message contains the matching string(case-insensitive). Can use Regular Expressions (use object instead of a string).
+
+```js
+"errorLens.excludeByMessage": [
+	"missing semicolon",// string match(includes), case-insensitive
+	{
+		"regex": "missing semicolon",// RegExp match
+		"flags": "iu"
+	},
+],
+```
 
 ### `errorLens.excludeBySource`
 

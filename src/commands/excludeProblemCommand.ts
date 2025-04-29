@@ -1,4 +1,3 @@
-import escapeRegExp from 'lodash/escapeRegExp';
 import { $config } from 'src/extension';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
@@ -46,18 +45,19 @@ export async function excludeProblemCommand(diagnostic: Diagnostic): Promise<voi
 }
 
 async function showExcludeByMessageNotification(message: string, diagnostic: Diagnostic): Promise<void> {
-	const messageToExclude = escapeRegExp(await window.showInputBox({
+	const messageToExclude = await window.showInputBox({
 		title: `${message}: Exclude by message:`,
 		value: diagnostic.message,
-	}));
+	});
 	if (!messageToExclude) {
 		return;
 	}
-	if ($config.exclude.includes(messageToExclude)) {
+
+	if ($config.excludeByMessage.includes(messageToExclude)) {
 		return;
 	}
-	await vscodeUtils.updateGlobalSetting(`${Constants.SettingsPrefix}.${'exclude' satisfies keyof ExtensionConfig}`, [
-		...$config.exclude,
+	await vscodeUtils.updateGlobalSetting(`${Constants.SettingsPrefix}.${'excludeByMessage' satisfies keyof ExtensionConfig}`, [
+		...$config.excludeByMessage,
 		messageToExclude,
 	]);
 
@@ -69,7 +69,7 @@ async function showCompletionByMessageNotification(messageToExclude: string): Pr
 	const pressedButton = await window.showInformationMessage(`Excluded problem by message: "${messageToExclude}"`, openSettingsButton);
 
 	if (pressedButton === openSettingsButton) {
-		vscodeUtils.openSettingGuiAt(`@ext:${Constants.ExtensionId} ${Constants.SettingsPrefix}.${'exclude' satisfies keyof ExtensionConfig}`);
+		vscodeUtils.openSettingGuiAt(`@ext:${Constants.ExtensionId} ${Constants.SettingsPrefix}.${'excludeByMessage' satisfies keyof ExtensionConfig}`);
 	}
 }
 

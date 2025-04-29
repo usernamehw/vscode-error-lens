@@ -55,6 +55,15 @@ export abstract class $state {
 	 * Array of RegExp (that would match against diagnostic message)
 	 */
 	static excludeRegexp: RegExp[] = [];
+
+	/**
+	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions.
+	 */
+	static excludeByMessage: { strings: string[]; regexps: RegExp[] } = {
+		strings: [],
+		regexps: [],
+	};
+
 	/**
 	 * Array of source/code to ignore (that would match against diagnostic object)
 	 */
@@ -204,6 +213,10 @@ function updateTransformState(): void {
  */
 function updateExcludeState(): void {
 	$state.excludeRegexp = [];
+	$state.excludeByMessage = {
+		regexps: [],
+		strings: [],
+	};
 	$state.excludeSources = [];
 	$state.excludePatterns = undefined;
 
@@ -219,10 +232,22 @@ function updateExcludeState(): void {
 		});
 	}
 
-	// ──── Exclude by message ────────────────────────────────────
+	// ──── Exclude by message (deprecated) ───────────────────────
 	for (const excludeMessage of $config.exclude) {
 		if (typeof excludeMessage === 'string') {
 			$state.excludeRegexp.push(createMessageRegex(excludeMessage));
+		}
+	}
+
+	// ──── Exclude by message new ────────────────────────────────
+	for (const excludeByMessage of $config.excludeByMessage || []) {
+		if (typeof excludeByMessage === 'string') {
+			$state.excludeByMessage.strings.push(excludeByMessage.toLocaleLowerCase());
+		} else {
+			if (!excludeByMessage.regex) {
+				continue;
+			}
+			$state.excludeByMessage.regexps.push(new RegExp(excludeByMessage.regex, excludeByMessage.flags ?? 'iu'));
 		}
 	}
 

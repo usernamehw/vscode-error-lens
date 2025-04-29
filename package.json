@@ -525,7 +525,39 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'iu');`"
+					"markdownDescription": "❗Deprecated. Use `#errorLens.excludeByMessage#`. Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'iu');`",
+					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.excludeByMessage#`. This setting makes all exclude messages to be Regular Expressions which is bad for performance. It could lead to `Extension causes high cpu load` problem. New setting `#errorLens.excludeByMessage#` matches strings by default, but can also use Regular Expressions if needed(usually not)."
+				},
+				"errorLens.excludeByMessage": {
+					"type": "array",
+					"default": [],
+					"items": {
+						"oneOf": [
+							{
+								"type": "string",
+								"default": ""
+							},
+							{
+								"type": "object",
+								"properties": {
+									"regex": {
+										"type": "string",
+										"default": ""
+									},
+									"flags": {
+										"type": "string",
+										"default": "iu"
+									}
+								},
+								"additionalProperties": false,
+								"default": {
+									"regex": "",
+									"flags": "iu"
+								}
+							}
+						]
+					},
+					"markdownDescription": "Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions (use object instead of a string)."
 				},
 				"errorLens.excludeBySource": {
 					"type": "array",
