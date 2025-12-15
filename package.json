@@ -600,6 +600,7 @@
 					"type": "object",
 					"default": {
 						"eslint": [
+							"**/*eslint.config.{js,mjs,cjs,ts,mts,cts}",
 							"**/*.eslintrc.{js,cjs,yaml,yml,json}",
 							"**/*package.json"
 						],
