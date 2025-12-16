@@ -716,7 +716,7 @@ Controls visibility of inline message (including background highlighting). Doesn
 
 ### `errorLens.problemRangeDecorationEnabled`
 
-VSCode now supports natively highlighting problem ranges even without this exntension (except `hint` severity):
+VSCode now supports natively highlighting problem ranges even without this extension (except `hint` severity):
 
 <table>
 <tbody>
