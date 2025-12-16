@@ -1275,8 +1275,8 @@
 	"devDependencies": {
 		"@soda/friendly-errors-webpack-plugin": "^1.8.1",
 		"@types/lodash": "^4.17.16",
-		"@types/node": "^18.19.80",
-		"@types/vscode": "^1.95.0",
+		"@types/node": "^22.19.3",
+		"@types/vscode": "^1.107.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"eslint": "^8.57.1",
