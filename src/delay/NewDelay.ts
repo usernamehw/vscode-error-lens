@@ -17,7 +17,11 @@ export class NewDelay {
 			trailing: true,
 		});
 
-		this.documentChangeDisposable = workspace.onDidChangeTextDocument(_ => {
+		this.documentChangeDisposable = workspace.onDidChangeTextDocument(changeEvent => {
+			if (changeEvent.document.languageId === 'scminput') {
+				return;
+			}
+
 			this.clearDecorationsForAllVisibleEditors();
 			this.updateDecorationsDebounced();
 			$state.codeLens?.hide();
