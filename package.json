@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "3.26.0",
+	"version": "3.27.0",
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
@@ -547,7 +547,9 @@
 												}
 											},
 											"description": "Match with problem's message using Regular Expressions.",
-											"required": ["regex"],
+											"required": [
+												"regex"
+											],
 											"additionalProperties": false
 										},
 										"source": {
@@ -555,7 +557,7 @@
 											"description": "Match with problem's source, e.g.: `eslint`, `ts`, ...",
 											"default": ""
 										},
-										"code" : {
+										"code": {
 											"description": "Match with problem's code, e.g.: `@typescript-eslint/semi`, `6133`, ...",
 											"type": "string"
 										}
