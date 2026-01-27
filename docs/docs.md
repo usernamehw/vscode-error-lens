@@ -1055,7 +1055,50 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 
 ### `errorLens.transmute`
 
-TODO: this
+<table>
+<tbody>
+
+<tr>
+<td>
+
+```js
+"errorLens.transmute": {},
+```
+
+</td>
+<td>
+
+```js
+"errorLens.transmute": {
+	"ESLint": {
+		"target": {
+			"source": "eslint",
+		},
+		"severity": "info",
+	},
+},
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/transmute_default.png)
+
+</td>
+
+<td>
+
+![](./img/transmute_eslint_info.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
+
 
 ### `errorLens.exclude`
 
