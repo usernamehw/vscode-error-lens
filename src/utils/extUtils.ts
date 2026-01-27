@@ -1,4 +1,5 @@
 import { $config, $state } from 'src/extension';
+import { transmuteSeverity } from 'src/transmute';
 import { Constants, type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { languages, window, workspace, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
@@ -98,10 +99,13 @@ export const extUtils = {
 	 *
 	 * Also, excludes diagnostics according to `errorLens.excludeSources` & `errorLens.exclude` settings.
 	 *
+	 * Also, apply `errorLens.transmute` setting.
+	 *
 	 * Also, sorts the problems in every line by severity err>warn>info>hint.
 	 */
 	groupDiagnosticsByLine(diagnostics: Diagnostic[]): GroupedByLineDiagnostics {
-		const groupedDiagnostics: GroupedByLineDiagnostics = {};
+		let groupedDiagnostics: GroupedByLineDiagnostics = {};
+
 		for (const diagnostic of diagnostics) {
 			if (extUtils.shouldExcludeDiagnostic(diagnostic)) {
 				continue;
@@ -115,6 +119,9 @@ export const extUtils = {
 				groupedDiagnostics[key] = [diagnostic];
 			}
 		}
+
+		// Apply setting `transmute` (needs to be done before sorting)
+		groupedDiagnostics = transmuteSeverity(groupedDiagnostics);
 
 		// Apply sorting err>warn>info>hint
 		for (const key in groupedDiagnostics) {
@@ -232,6 +239,20 @@ export const extUtils = {
 			(severity === 2 && $state.configInfoEnabled) ||
 			(severity === 3 && $state.configHintEnabled)
 		);
+	},
+	/**
+	 * Change string severity to VSCode's severity.
+	 */
+	severityStringToNumber(severity: 'error' | 'info' | 'warning' | 'hint'): 0 | 1 | 2 | 3 {
+		if (severity === 'error') {
+			return 0;
+		} else if (severity === 'warning') {
+			return 1;
+		} else if (severity === 'info') {
+			return 2;
+		} else {
+			return 3;
+		}
 	},
 	/**
 	 * Generate inline message from template.

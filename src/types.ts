@@ -1,4 +1,4 @@
-import { type DecorationRenderOptions } from 'vscode';
+import { TextEditorDecorationType, type DecorationRenderOptions } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -111,6 +111,22 @@ interface ExtensionConfigType {
 		matcher: string;
 		message: string;
 	}[];
+	/**
+	 * Change editor decoration for specific problems (only severity for now).
+	 */
+	transmute: Record<string, {
+		target: {
+			message?: string;
+			messageRegex?: {
+				regex: string;
+				flags?: string;
+			};
+			source?: string;
+			code?: string | number;
+		};
+		severity: 'error' | 'warning' | 'info' | 'hint';
+		// decoration: DecorationRenderOptions;
+	}>;
 	/**
 	 * Array of diagnostic messages that should not be decorated. Matches against `Diagnostic.message`.
 	 */

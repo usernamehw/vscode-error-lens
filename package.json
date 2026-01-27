@@ -6,7 +6,7 @@
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
-		"vscode": "^1.95.0",
+		"vscode": "^1.107.0",
 		"npm": ">=10.0.0"
 	},
 	"extensionKind": [
@@ -518,6 +518,65 @@
 						]
 					},
 					"markdownDescription": "Specify message to transform. E.g. if this is configured to [{ matcher: 'foo (.*)', message: 'just $1' }], the message 'foo bar' would be displayed as 'just bar'. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensreplace)"
+				},
+				"errorLens.transmute": {
+					"type": "object",
+					"default": {},
+					"patternProperties": {
+						".*": {
+							"type": "object",
+							"properties": {
+								"target": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string",
+											"default": ""
+										},
+										"messageRegex": {
+											"type": "object",
+											"properties": {
+												"regex": {
+													"type": "string",
+													"default": ""
+												},
+												"flags": {
+													"type": "string",
+													"default": "iu"
+												}
+											},
+											"required": ["regex"],
+											"additionalProperties": false
+										},
+										"source": {
+											"type": "string",
+											"default": ""
+										},
+										"code" : {
+											"oneOf": [
+												{
+													"type": "string"
+												},
+												{
+													"type": "number"
+												}
+											]
+										}
+									}
+								},
+								"severity": {
+									"type": "string",
+									"enum": [
+										"error",
+										"warning",
+										"info",
+										"hint"
+									]
+								}
+							}
+						}
+					},
+					"markdownDescription": "Change editor decoration for specific problems (only severity for now)."
 				},
 				"errorLens.exclude": {
 					"type": "array",

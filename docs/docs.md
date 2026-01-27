@@ -1053,6 +1053,10 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 </tbody>
 </table>
 
+### `errorLens.transmute`
+
+TODO: this
+
 ### `errorLens.exclude`
 
 > ❗Deprecated. Use [errorLens.excludeByMessage](#errorlensexcludebymessage).

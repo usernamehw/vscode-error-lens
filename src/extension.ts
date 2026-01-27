@@ -80,6 +80,11 @@ export abstract class $state {
 	}[] = undefined;
 
 	/**
+	 * `true` when use specified anything inide of `errorLens.transmute` setting.
+	 */
+	static transmuteExists: boolean;
+
+	/**
 	 * Editor icons can be rendered only for active line (to reduce the visual noise).
 	 * But it might be useful to show gutter icons for all lines. With `gutterIconsFollowCursorOverride`
 	 * setting then gutter icons will be rendered as a separate set of decorations.
@@ -185,6 +190,8 @@ export function updateEverything(context: ExtensionContext): void {
 	$state.configWarningEnabled = $config.enabledDiagnosticLevels.includes('warning');
 	$state.configInfoEnabled = $config.enabledDiagnosticLevels.includes('info');
 	$state.configHintEnabled = $config.enabledDiagnosticLevels.includes('hint');
+
+	$state.transmuteExists = Object.keys($config.transmute).length > 0;
 
 	setDecorationStyle(context);
 
