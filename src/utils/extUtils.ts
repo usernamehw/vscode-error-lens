@@ -161,13 +161,6 @@ export const extUtils = {
 			}
 		}
 
-		// ──── Exclude by message (deprecated) ───────────────────────
-		for (const regexp of $state.excludeRegexp) {
-			if (regexp.test(diagnostic.message)) {
-				return true;
-			}
-		}
-
 		// ──── New exclude by message ────────────────────────────────
 		const diagnosticMessageLowercased = diagnostic.message.toLocaleLowerCase();
 		for (const string of $state.excludeByMessage.strings) {

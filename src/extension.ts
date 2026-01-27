@@ -52,11 +52,6 @@ export abstract class $state {
 	}[] = undefined;
 
 	/**
-	 * Array of RegExp (that would match against diagnostic message)
-	 */
-	static excludeRegexp: RegExp[] = [];
-
-	/**
 	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions.
 	 */
 	static excludeByMessage: { strings: string[]; regexps: RegExp[] } = {
@@ -219,7 +214,6 @@ function updateTransformState(): void {
  * - Create `source/code` exclusion object.
  */
 function updateExcludeState(): void {
-	$state.excludeRegexp = [];
 	$state.excludeByMessage = {
 		regexps: [],
 		strings: [],
@@ -237,13 +231,6 @@ function updateExcludeState(): void {
 			source: sourceCode.source,
 			code: sourceCode.code,
 		});
-	}
-
-	// ──── Exclude by message (deprecated) ───────────────────────
-	for (const excludeMessage of $config.exclude) {
-		if (typeof excludeMessage === 'string') {
-			$state.excludeRegexp.push(createMessageRegex(excludeMessage));
-		}
 	}
 
 	// ──── Exclude by message new ────────────────────────────────

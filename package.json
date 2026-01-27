@@ -578,15 +578,6 @@
 					},
 					"markdownDescription": "Change editor decoration for specific problems (only severity for now)."
 				},
-				"errorLens.exclude": {
-					"type": "array",
-					"default": [],
-					"items": {
-						"type": "string"
-					},
-					"markdownDescription": "❗Deprecated. Use `#errorLens.excludeByMessage#`. Specify messages that should not be highlighted (RegExp). Strings passed to the RegExp constructor: `new RegExp(EXCLUDE_ITEM, 'iu');`",
-					"markdownDeprecationMessage": "Deprecated in favor of `#errorLens.excludeByMessage#`. This setting makes all exclude messages to be Regular Expressions which is bad for performance. It could lead to `Extension causes high cpu load` problem. New setting `#errorLens.excludeByMessage#` matches strings by default, but can also use Regular Expressions if needed(usually not)."
-				},
 				"errorLens.excludeByMessage": {
 					"type": "array",
 					"default": [],

@@ -128,10 +128,6 @@ interface ExtensionConfigType {
 		// decoration: DecorationRenderOptions;
 	}>;
 	/**
-	 * Array of diagnostic messages that should not be decorated. Matches against `Diagnostic.message`.
-	 */
-	exclude: string[];
-	/**
 	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions (use object instead of a string).
 	 */
 	excludeByMessage: (string | { regex: string; flags: string })[];
