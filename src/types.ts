@@ -1,4 +1,4 @@
-import { TextEditorDecorationType, type DecorationRenderOptions } from 'vscode';
+import { type DecorationRenderOptions } from 'vscode';
 
 interface ExtensionConfigType {
 	/**
@@ -122,7 +122,7 @@ interface ExtensionConfigType {
 				flags?: string;
 			};
 			source?: string;
-			code?: string | number;
+			code?: string;
 		};
 		severity: 'error' | 'warning' | 'info' | 'hint';
 		// decoration: DecorationRenderOptions;

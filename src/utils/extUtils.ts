@@ -120,8 +120,10 @@ export const extUtils = {
 			}
 		}
 
-		// Apply setting `transmute` (needs to be done before sorting)
-		groupedDiagnostics = transmuteSeverity(groupedDiagnostics);
+		// Apply setting `transmute`, specifically "severity" property. (needs to be done before sorting)
+		if ($state.transmuteExists) {
+			groupedDiagnostics = transmuteSeverity(groupedDiagnostics);
+		}
 
 		// Apply sorting err>warn>info>hint
 		for (const key in groupedDiagnostics) {

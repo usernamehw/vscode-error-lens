@@ -43,7 +43,7 @@ function targetMatchesProblem(transmuteItem: ExtensionConfig['transmute'][''], p
 	}
 
 	if (transmuteItem.target.code && problem.code) {
-		if (transmuteItem.target.code !== problem.code) {
+		if (transmuteItem.target.code !== extUtils.getDiagnosticCode(problem)) {
 			return false;
 		}
 	}

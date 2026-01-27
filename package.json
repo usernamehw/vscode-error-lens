@@ -261,7 +261,7 @@
 						],
 						"useFixedPosition": true
 					},
-					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensalignmessage)",
+					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable. ❗Will conflict with other extension decorations. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensalignmessage)",
 					"additionalProperties": false
 				},
 				"errorLens.border": {
@@ -531,6 +531,7 @@
 									"properties": {
 										"message": {
 											"type": "string",
+											"description": "Match with problem's message (case-insensitive).",
 											"default": ""
 										},
 										"messageRegex": {
@@ -545,22 +546,18 @@
 													"default": "iu"
 												}
 											},
+											"description": "Match with problem's message using Regular Expressions.",
 											"required": ["regex"],
 											"additionalProperties": false
 										},
 										"source": {
 											"type": "string",
+											"description": "Match with problem's source, e.g.: `eslint`, `ts`, ...",
 											"default": ""
 										},
 										"code" : {
-											"oneOf": [
-												{
-													"type": "string"
-												},
-												{
-													"type": "number"
-												}
-											]
+											"description": "Match with problem's code, e.g.: `@typescript-eslint/semi`, `6133`, ...",
+											"type": "string"
 										}
 									}
 								},
