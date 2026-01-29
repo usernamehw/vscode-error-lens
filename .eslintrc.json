@@ -32,7 +32,7 @@
 		],
 		"@typescript-eslint/await-thenable": 1,
 		"@typescript-eslint/ban-ts-comment": [
-			1,
+			0,
 			{
 				"ts-expect-error": "allow-with-description",
 				"ts-ignore": "allow-with-description"
@@ -55,7 +55,7 @@
 		],
 		"@typescript-eslint/class-literal-property-style": 1,
 		"@typescript-eslint/consistent-generic-constructors": 1,
-		"@typescript-eslint/consistent-indexed-object-style": 1,
+		"@typescript-eslint/consistent-indexed-object-style": 0,
 		"@typescript-eslint/consistent-type-assertions": [
 			1,
 			{
@@ -249,7 +249,7 @@
 		"@typescript-eslint/prefer-regexp-exec": 1,
 		"@typescript-eslint/prefer-return-this-type": 1,
 		"@typescript-eslint/prefer-string-starts-ends-with": 1,
-		"@typescript-eslint/prefer-ts-expect-error": 1,
+		"@typescript-eslint/prefer-ts-expect-error": 0,
 		"@typescript-eslint/promise-function-async": 1,
 		"@typescript-eslint/require-array-sort-compare": 1,
 		"@typescript-eslint/restrict-plus-operands": 1,
@@ -657,7 +657,7 @@
 		"max-depth": [
 			1,
 			{
-				"max": 4
+				"max": 5
 			}
 		],
 		"max-lines": 0,

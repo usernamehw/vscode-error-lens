@@ -1,6 +1,6 @@
 ## 3.27.0 `27 Jan 2026`
 
-- ✨ Pick a problem by (message/source/code) and change its severity. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)
+- ✨ Pick a problem by (message/source/code) and change its severity `"errorLens.transmute"` setting. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)
 - 🔨 Delete deprecated setting `"errorLens.exclude"`
 
 ## 3.26.0 `29 Apr 2025`

@@ -565,12 +565,159 @@
 								},
 								"severity": {
 									"type": "string",
+									"markdownDescription": "Change problem's severity (can affect which decoration is rendered).",
 									"enum": [
 										"error",
 										"warning",
 										"info",
 										"hint"
 									]
+								},
+								"decoration": {
+									"type": "object",
+									"markdownDescription": "Change decoration properties.",
+									"properties": {
+										"light": {
+											"type": "object",
+											"description": "Only works for Light color themes.",
+											"properties": {
+												"backgroundColor": {
+													"type": "string",
+													"format": "color"
+												},
+												"color": {
+													"type": "string",
+													"format": "color"
+												},
+												"border": {
+													"type": "string"
+												},
+												"outline": {
+													"type": "string"
+												},
+												"borderRadius": {
+													"type": "string"
+												},
+												"borderSpacing": {
+													"type": "string"
+												},
+												"fontStyle": {
+													"type": "string"
+												},
+												"fontWeight": {
+													"type": "string"
+												},
+												"textDecoration": {
+													"type": "string"
+												},
+												"opacity": {
+													"type": "string"
+												},
+												"letterSpacing": {
+													"type": "string"
+												},
+												"after": {
+													"type": "object",
+													"description": "Change the properties of the inline message.",
+													"properties": {
+														"backgroundColor": {
+															"type": "string",
+															"format": "color"
+														},
+														"color": {
+															"type": "string",
+															"format": "color"
+														},
+														"border": {
+															"type": "string"
+														},
+														"borderRadius": {
+															"type": "string"
+														},
+														"fontStyle": {
+															"type": "string"
+														},
+														"fontWeight": {
+															"type": "string"
+														},
+														"textDecoration": {
+															"type": "string"
+														}
+													}
+												}
+											}
+										},
+										"dark": {
+											"type": "object",
+											"description": "Only works for Dark color themes.",
+											"properties": {
+												"backgroundColor": {
+													"type": "string",
+													"format": "color"
+												},
+												"color": {
+													"type": "string",
+													"format": "color"
+												},
+												"border": {
+													"type": "string"
+												},
+												"outline": {
+													"type": "string"
+												},
+												"borderRadius": {
+													"type": "string"
+												},
+												"borderSpacing": {
+													"type": "string"
+												},
+												"fontStyle": {
+													"type": "string"
+												},
+												"fontWeight": {
+													"type": "string"
+												},
+												"textDecoration": {
+													"type": "string"
+												},
+												"opacity": {
+													"type": "string"
+												},
+												"letterSpacing": {
+													"type": "string"
+												},
+												"after": {
+													"type": "object",
+													"description": "Change the properties of the inline message.",
+													"properties": {
+														"backgroundColor": {
+															"type": "string",
+															"format": "color"
+														},
+														"color": {
+															"type": "string",
+															"format": "color"
+														},
+														"border": {
+															"type": "string"
+														},
+														"borderRadius": {
+															"type": "string"
+														},
+														"fontStyle": {
+															"type": "string"
+														},
+														"fontWeight": {
+															"type": "string"
+														},
+														"textDecoration": {
+															"type": "string"
+														}
+													}
+												}
+											}
+										}
+									}
 								}
 							}
 						}

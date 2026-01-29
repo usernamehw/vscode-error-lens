@@ -3,6 +3,7 @@ import { getStyleForAlignment } from 'src/decorations/align';
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, updateWorkaroundGutterIcon, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
+import { disposeTransmutedDecorations, doUpdateTransmutedDecorations, setTransmutedDecorationStyle, transmute } from 'src/transmute';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
@@ -37,6 +38,8 @@ type DecorationKeys =
 	'transparent1x1Icon';
 
 export const decorationTypes = {} as unknown as Record<DecorationKeys, TextEditorDecorationType>;
+/** Decoration base that is shared among all severity problems. */
+export const decorationRenderOptions = {} as unknown as Record<'error' | 'warning' | 'info' | 'hint', DecorationRenderOptions>;
 
 /**
  * VSCode doesn't support some options like changing font-size or font-family
@@ -295,6 +298,15 @@ export function setDecorationStyle(context: ExtensionContext): void {
 	decorationTypes.info = window.createTextEditorDecorationType(decorationRenderOptionsInfo);
 	decorationTypes.hint = window.createTextEditorDecorationType(decorationRenderOptionsHint);
 
+	decorationRenderOptions.error = decorationRenderOptionsError;
+	decorationRenderOptions.warning = decorationRenderOptionsWarning;
+	decorationRenderOptions.info = decorationRenderOptionsInfo;
+	decorationRenderOptions.hint = decorationRenderOptionsHint;
+
+	if ($state.transmuteExists) {
+		setTransmutedDecorationStyle(decorationRenderOptions);
+	}
+
 	// ──── Range ─────────────────────────────────────────────────
 	decorationTypes.errorRange = window.createTextEditorDecorationType({
 		backgroundColor: new ThemeColor('errorLens.errorRangeBackground'),
@@ -355,10 +367,10 @@ function doUpdateDecorations({
 }): void {
 	$state.log('doUpdateDecorations()', editor.document.uri.toString(true));
 
-	const decorationOptionsError: DecorationOptions[] = [];
-	const decorationOptionsWarning: DecorationOptions[] = [];
-	const decorationOptionsInfo: DecorationOptions[] = [];
-	const decorationOptionsHint: DecorationOptions[] = [];
+	let decorationOptionsError: DecorationOptions[] = [];
+	let decorationOptionsWarning: DecorationOptions[] = [];
+	let decorationOptionsInfo: DecorationOptions[] = [];
+	let decorationOptionsHint: DecorationOptions[] = [];
 
 	const decorationOptionsErrorRange: DecorationOptions[] = [];
 	const decorationOptionsWarningRange: DecorationOptions[] = [];
@@ -389,14 +401,16 @@ function doUpdateDecorations({
 
 		let message: string | undefined;
 
+		const preparedMessage = extUtils.prepareMessage({
+			diagnostic,
+			template: $config.messageTemplate,
+			lineProblemCount: allDiagnosticsInLine.length,
+			removeLinebreaks: $config.removeLinebreaks,
+			replaceLinebreaksSymbol: $config.replaceLinebreaksSymbol,
+		});
+
 		if (extUtils.shouldShowInlineMessage()) {
-			message = extUtils.prepareMessage({
-				diagnostic,
-				template: $config.messageTemplate,
-				lineProblemCount: allDiagnosticsInLine.length,
-				removeLinebreaks: $config.removeLinebreaks,
-				replaceLinebreaksSymbol: $config.replaceLinebreaksSymbol,
-			});
+			message = preparedMessage;
 		} else {
 			message = undefined;
 		}
@@ -429,6 +443,8 @@ function doUpdateDecorations({
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 			after: {
 				contentText: message,
+				// @ts-expect-error need for `transmute` feature
+				problem: diagnostic,
 				// height: extUtils.shouldAlign() && $config.alignMessage.useFixedPosition ? '100%' : undefined,
 				textDecoration: extUtils.shouldAlign() ? `${textDecorationStyleString};${alignMarginStyle}` : undefined,
 			},
@@ -526,6 +542,23 @@ function doUpdateDecorations({
 		updateWorkaroundGutterIcon(editor);
 	}
 
+	if ($state.transmuteExists) {
+		const transmutedDecorations = transmute({
+			decorationOptionsError,
+			decorationOptionsWarning,
+			decorationOptionsInfo,
+			decorationOptionsHint,
+			decorationRenderBase: decorationRenderOptions,
+		});
+
+		decorationOptionsError = transmutedDecorations.nonTransmuted.error;
+		decorationOptionsWarning = transmutedDecorations.nonTransmuted.warning;
+		decorationOptionsInfo = transmutedDecorations.nonTransmuted.info;
+		decorationOptionsHint = transmutedDecorations.nonTransmuted.hint;
+
+		doUpdateTransmutedDecorations(transmutedDecorations.transmuted, editor);
+	}
+
 	editor.setDecorations(decorationTypes.error, decorationOptionsError);
 	editor.setDecorations(decorationTypes.warning, decorationOptionsWarning);
 	editor.setDecorations(decorationTypes.info, decorationOptionsInfo);
@@ -609,5 +642,6 @@ export function disposeAllDecorations(): void {
 	for (const decorationType of Object.values(decorationTypes)) {
 		decorationType?.dispose();
 	}
+	disposeTransmutedDecorations();
 }
 

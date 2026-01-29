@@ -245,9 +245,11 @@ export const extUtils = {
 			return 1;
 		} else if (severity === 'info') {
 			return 2;
-		} else {
+		} else if (severity === 'hint') {
 			return 3;
 		}
+
+		throw Error(`Unknown severity ${String(severity)}`);
 	},
 	/**
 	 * Generate inline message from template.
