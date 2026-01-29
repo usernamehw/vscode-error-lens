@@ -1055,6 +1055,8 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 
 ### `errorLens.transmute`
 
+1. Transmute severity will change decoration's severity (e.g. `error` => `warning`) and can change which decoration is rendered (only 1 decoration with the highest severity is rendered per line).
+
 <table>
 <tbody>
 
@@ -1085,13 +1087,13 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 <tr>
 <td>
 
-![](./img/transmute_default.png)
+![](./img/transmute_severity_default.png)
 
 </td>
 
 <td>
 
-![](./img/transmute_eslint_info.png)
+![](./img/transmute_severity_modified.png)
 
 </td>
 
@@ -1099,12 +1101,58 @@ Replace message with custom one. Uses strings to create RegExp with `iu` flags.
 </tbody>
 </table>
 
+2. Transmute decoration will change decoration style:
 
-### `errorLens.exclude`
+<table>
+<tbody>
 
-> ❗Deprecated. Use [errorLens.excludeByMessage](#errorlensexcludebymessage).
+<tr>
+<td>
 
-Exclude diagnostics by message. Uses strings to create RegExp with `iu` flags.
+```js
+"errorLens.transmute": {},
+```
+
+</td>
+<td>
+
+```js
+"errorLens.transmute": {
+	"semi": {
+		"target": {
+			"message": "missing semicolon",
+		},
+		"decoration": {
+			"light": {
+				"after": {
+					"backgroundColor": "#00000010",
+					"color": "#444444",
+				},
+			},
+		},
+	},
+},
+```
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+![](./img/transmute_decoration_default.png)
+
+</td>
+
+<td>
+
+![](./img/transmute_decoration_modified.png)
+
+</td>
+
+</tr>
+</tbody>
+</table>
 
 ### `errorLens.excludeByMessage`
 
