@@ -1,3 +1,7 @@
+## 3.28.0 `29 Jan 2026`
+
+- ✨ Pick a problem by (message/source/code) and change its visual style `"errorLens.transmute"` setting. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)
+
 ## 3.27.0 `27 Jan 2026`
 
 - ✨ Pick a problem by (message/source/code) and change its severity `"errorLens.transmute"` setting. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)
