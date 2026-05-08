@@ -1101,7 +1101,7 @@
 				},
 				"errorLens.decorations": {
 					"type": "object",
-					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`, `errorMessage, `warningMessage`, `infoMessage`, `hintMessage`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ... [api](https://code.visualstudio.com/api/references/vscode-api#ThemableDecorationAttachmentRenderOptions). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensdecorations)",
+					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`, `errorMessage`, `warningMessage`, `infoMessage`, `hintMessage`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ... [api](https://code.visualstudio.com/api/references/vscode-api#ThemableDecorationAttachmentRenderOptions). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensdecorations)",
 					"default": {
 						"errorRange": {},
 						"warningRange": {},
