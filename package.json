@@ -3,7 +3,7 @@
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
 	"version": "3.28.0",
-	"publisher": "usernamehw",
+	"publisher": "CyberT33N",
 	"license": "MIT",
 	"engines": {
 		"vscode": "^1.107.0",
@@ -32,7 +32,7 @@
 	"icon": "img/icon.png",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/usernamehw/vscode-error-lens"
+		"url": "https://github.com/CyberT33N/vscode-error-lens"
 	},
 	"activationEvents": [
 		"onStartupFinished"
@@ -177,7 +177,7 @@
 				"errorLens.fontFamily": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Font family of inline message. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontfamily). May break `#errorLens.alignMessage#`"
+					"markdownDescription": "Font family of inline message. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfontfamily). May break `#errorLens.alignMessage#`"
 				},
 				"errorLens.fontWeight": {
 					"type": "string",
@@ -195,22 +195,22 @@
 						"900"
 					],
 					"default": "normal",
-					"markdownDescription": "Font weight of inline message. `\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
+					"markdownDescription": "Font weight of inline message. `\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "When enabled - shows inline message in italic font style. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontstyleitalic)"
+					"markdownDescription": "When enabled - shows inline message in italic font style. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfontstyleitalic)"
 				},
 				"errorLens.fontSize": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Font size of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). Use negative value to have it relative to the editor's fontSize (e.g. `-3px`). May break `#errorLens.alignMessage#`. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontsize)."
+					"markdownDescription": "Font size of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). Use negative value to have it relative to the editor's fontSize (e.g. `-3px`). May break `#errorLens.alignMessage#`. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfontsize)."
 				},
 				"errorLens.margin": {
 					"type": "string",
 					"default": "4ch",
-					"markdownDescription": "Distance between the last word on the line and the start of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmargin)"
+					"markdownDescription": "Distance between the last word on the line and the start of inline message ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/length)). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensmargin)"
 				},
 				"errorLens.alignMessage": {
 					"type": "object",
@@ -261,7 +261,7 @@
 						],
 						"useFixedPosition": true
 					},
-					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable. ❗Will conflict with other extension decorations. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensalignmessage)",
+					"markdownDescription": "Align inline error message (either by starting position or ending position). Only works for monospace fonts. Set \"start\" and \"end\" to **0** to disable. ❗Will conflict with other extension decorations. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensalignmessage)",
 					"additionalProperties": false
 				},
 				"errorLens.border": {
@@ -279,12 +279,12 @@
 					"minItems": 4,
 					"maxItems": 4,
 					"additionalItems": false,
-					"markdownDescription": "Border of the inline message. Examples: `1px solid`, `1px dashed`, `2px dotted`, `1px solid #00000050`... Set to empty string to disable. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensborder)"
+					"markdownDescription": "Border of the inline message. Examples: `1px solid`, `1px dashed`, `2px dotted`, `1px solid #00000050`... Set to empty string to disable. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensborder)"
 				},
 				"errorLens.padding": {
 					"type": "string",
 					"default": "",
-					"markdownDescription": "Padding of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\". [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenspadding)",
+					"markdownDescription": "Padding of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\". [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenspadding)",
 					"examples": [
 						"2px 1ch"
 					]
@@ -292,7 +292,7 @@
 				"errorLens.borderRadius": {
 					"type": "string",
 					"default": "0.2em",
-					"markdownDescription": "Border radius of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\". [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensborderradius)",
+					"markdownDescription": "Border radius of the inline message. Visible when `#errorLens.messageBackgroundMode#` is set to \"message\". [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensborderradius)",
 					"examples": [
 						"5px",
 						"5em 0px",
@@ -311,7 +311,7 @@
 						]
 					},
 					"uniqueItems": true,
-					"markdownDescription": "Customize which diagnostic levels(severity) to highlight. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensenableddiagnosticlevels)",
+					"markdownDescription": "Customize which diagnostic levels(severity) to highlight. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensenableddiagnosticlevels)",
 					"default": [
 						"error",
 						"warning",
@@ -321,20 +321,20 @@
 				"errorLens.messageTemplate": {
 					"type": "string",
 					"default": "$message",
-					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagetemplate)"
+					"markdownDescription": "Template used for all inline messages. Whitespace between items is important.\n\nList of variables:\n\n- `$message` - diagnostic message text\n\n- `$count` - Number of diagnostics on the line\n\n- `$severity` - Severity prefix taken from `#errorLens.severityText#`\n\n- `$source` - Source of diagnostic e.g. \"eslint\"\n\n- `$code` - Code of the diagnostic [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagetemplate)"
 				},
 				"errorLens.messageMaxChars": {
 					"type": "integer",
 					"default": 500,
 					"minimum": 0,
-					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagemaxchars)"
+					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagemaxchars)"
 				},
 				"errorLens.severityText": {
 					"type": "array",
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Replaces `$severity` variable in `#errorLens.messageTemplate#`. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensseveritytext)",
+					"markdownDescription": "Replaces `$severity` variable in `#errorLens.messageTemplate#`. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensseveritytext)",
 					"default": [
 						"⛔",
 						"⚠",
@@ -347,7 +347,7 @@
 				"errorLens.messageEnabled": {
 					"type": "boolean",
 					"default": true,
-					"markdownDescription": "Controls whether inline message is shown or not (Including background highlight). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessageenabled)"
+					"markdownDescription": "Controls whether inline message is shown or not (Including background highlight). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensmessageenabled)"
 				},
 				"errorLens.messageBackgroundMode": {
 					"type": "string",
@@ -362,12 +362,12 @@
 						"Inline message is highlighted.",
 						"Message is not highlighted (only has foreground colors)."
 					],
-					"markdownDescription": "Controls how inline message is highlighted in the editor (entire line / only message / none). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagebackgroundmode)"
+					"markdownDescription": "Controls how inline message is highlighted in the editor (entire line / only message / none). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagebackgroundmode)"
 				},
 				"errorLens.problemRangeDecorationEnabled": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "When checked - highlight the entire problem range. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensproblemrangedecorationenabled)"
+					"markdownDescription": "When checked - highlight the entire problem range. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensproblemrangedecorationenabled)"
 				},
 				"errorLens.editorHoverPartsEnabled": {
 					"type": "object",
@@ -395,7 +395,7 @@
 				},
 				"errorLens.statusBarIconsEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbariconsenabled)",
+					"markdownDescription": "When enabled - shows highlighted error/warning icons in status bar. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbariconsenabled)",
 					"default": false
 				},
 				"errorLens.statusBarIconsPriority": {
@@ -443,7 +443,7 @@
 				},
 				"errorLens.statusBarMessageEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When enabled - shows message in status bar. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbarmessageenabled)",
+					"markdownDescription": "When enabled - shows message in status bar. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbarmessageenabled)",
 					"default": false
 				},
 				"errorLens.statusBarMessagePriority": {
@@ -462,7 +462,7 @@
 				},
 				"errorLens.statusBarColorsEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text. Uses colors `errorLens.statusBarErrorForeground`, `errorLens.statusBarWarningForeground`, `errorLens.statusBarInfoForeground`, `errorLens.statusBarHintForeground`. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbarcolorsenabled)",
+					"markdownDescription": "When enabled - use message decoration foreground as color of Status Bar text. Uses colors `errorLens.statusBarErrorForeground`, `errorLens.statusBarWarningForeground`, `errorLens.statusBarInfoForeground`, `errorLens.statusBarHintForeground`. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensstatusbarcolorsenabled)",
 					"default": false
 				},
 				"errorLens.statusBarMessageType": {
@@ -517,7 +517,7 @@
 							"message"
 						]
 					},
-					"markdownDescription": "Specify message to transform. E.g. if this is configured to [{ matcher: 'foo (.*)', message: 'just $1' }], the message 'foo bar' would be displayed as 'just bar'. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensreplace)"
+					"markdownDescription": "Specify message to transform. E.g. if this is configured to [{ matcher: 'foo (.*)', message: 'just $1' }], the message 'foo bar' would be displayed as 'just bar'. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensreplace)"
 				},
 				"errorLens.transmute": {
 					"type": "object",
@@ -935,7 +935,7 @@
 				},
 				"errorLens.enableOnDiffView": {
 					"type": "boolean",
-					"markdownDescription": "Enable decorations when viewing a diff view in the editor (e.g. Git diff). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensenableondiffview)",
+					"markdownDescription": "Enable decorations when viewing a diff view in the editor (e.g. Git diff). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensenableondiffview)",
 					"default": false
 				},
 				"errorLens.followCursor": {
@@ -952,27 +952,27 @@
 						"Highlight only the problem at the cursor",
 						"Highlight only closest to the cursor problem"
 					],
-					"markdownDescription": "Highlight only portion of the problems. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfollowcursor)",
+					"markdownDescription": "Highlight only portion of the problems. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfollowcursor)",
 					"default": "allLines"
 				},
 				"errorLens.followCursorMore": {
 					"type": "number",
-					"markdownDescription": "Augments `#errorLens.followCursor#`.\nAdds number of lines to top and bottom when `#errorLens.followCursor#` is set to `activeLine`.\n Adds number of closest problems when `#errorLens.followCursor#` is `closestProblem` [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfollowcursormore)",
+					"markdownDescription": "Augments `#errorLens.followCursor#`.\nAdds number of lines to top and bottom when `#errorLens.followCursor#` is set to `activeLine`.\n Adds number of closest problems when `#errorLens.followCursor#` is `closestProblem` [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensfollowcursormore)",
 					"default": 0
 				},
 				"errorLens.gutterIconsEnabled": {
 					"type": "boolean",
-					"markdownDescription": "When enabled - shows gutter icons (In place of the debug breakpoint icon). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsenabled)",
+					"markdownDescription": "When enabled - shows gutter icons (In place of the debug breakpoint icon). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsenabled)",
 					"default": false
 				},
 				"errorLens.gutterIconsFollowCursorOverride": {
 					"type": "boolean",
-					"markdownDescription": "When enabled and `#errorLens.followCursor#` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsfollowcursoroverride)",
+					"markdownDescription": "When enabled and `#errorLens.followCursor#` setting is not `allLines`, then gutter icons would be rendered for all problems. But line decorations (background, message) only for active line. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsfollowcursoroverride)",
 					"default": true
 				},
 				"errorLens.gutterIconSize": {
 					"type": "string",
-					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%` ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size)). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsize)",
+					"markdownDescription": "Change gutter icon size. Examples: `auto`, `contain`, `cover`, `50%`, `150%` ([CSS units](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size)). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonsize)",
 					"examples": [
 						"auto",
 						"contain",
@@ -984,7 +984,7 @@
 				},
 				"errorLens.gutterIconSet": {
 					"type": "string",
-					"markdownDescription": "Change gutter icon style. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonset)",
+					"markdownDescription": "Change gutter icon style. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensguttericonset)",
 					"enum": [
 						"default",
 						"defaultOutline",
@@ -1038,50 +1038,50 @@
 						"hint": "🍏"
 					},
 					"additionalProperties": false,
-					"markdownDescription": "Pick emoji symbol for gutter icon when `#errorLens.gutterIconSet#` is `emoji`. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensgutteremoji)"
+					"markdownDescription": "Pick emoji symbol for gutter icon when `#errorLens.gutterIconSet#` is `emoji`. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensgutteremoji)"
 				},
 				"errorLens.errorGutterIconPath": {
 					"type": "string",
-					"markdownDescription": "Absolute path to error gutter icon. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
+					"markdownDescription": "Absolute path to error gutter icon. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
 					"default": ""
 				},
 				"errorLens.warningGutterIconPath": {
 					"type": "string",
-					"markdownDescription": "Absolute path to warning gutter icon. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
+					"markdownDescription": "Absolute path to warning gutter icon. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
 					"default": ""
 				},
 				"errorLens.infoGutterIconPath": {
 					"type": "string",
-					"markdownDescription": "Absolute path to info gutter icon. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
+					"markdownDescription": "Absolute path to info gutter icon. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
 					"default": ""
 				},
 				"errorLens.hintGutterIconPath": {
 					"type": "string",
-					"markdownDescription": "Absolute path to hint gutter icon. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
+					"markdownDescription": "Absolute path to hint gutter icon. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericonpath)",
 					"default": ""
 				},
 				"errorLens.errorGutterIconColor": {
 					"type": "string",
 					"default": "#e45454",
-					"markdownDescription": "Error color of simple gutter icons (shapes and letters). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
+					"markdownDescription": "Error color of simple gutter icons (shapes and letters). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
 					"format": "color"
 				},
 				"errorLens.warningGutterIconColor": {
 					"type": "string",
 					"default": "#ff942f",
-					"markdownDescription": "Warning color of simple gutter icons (shapes and letters). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
+					"markdownDescription": "Warning color of simple gutter icons (shapes and letters). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
 					"format": "color"
 				},
 				"errorLens.infoGutterIconColor": {
 					"type": "string",
 					"default": "#00b7e4",
-					"markdownDescription": "Info color of simple gutter icons (shapes and letters). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
+					"markdownDescription": "Info color of simple gutter icons (shapes and letters). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
 					"format": "color"
 				},
 				"errorLens.hintGutterIconColor": {
 					"type": "string",
 					"default": "#2faf64",
-					"markdownDescription": "Hint color of simple gutter icons (shapes and letters). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
+					"markdownDescription": "Hint color of simple gutter icons (shapes and letters). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenserrorguttericoncolor)",
 					"format": "color"
 				},
 				"errorLens.removeLinebreaks": {
@@ -1097,11 +1097,11 @@
 				"errorLens.scrollbarHackEnabled": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations). Also prevents mouse hover at inline message. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensscrollbarhackenabled)"
+					"markdownDescription": "When enabled - prevents showing horizontal scrollbar in editor (caused by inline decorations). Also prevents mouse hover at inline message. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensscrollbarhackenabled)"
 				},
 				"errorLens.decorations": {
 					"type": "object",
-					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`, `errorMessage`, `warningMessage`, `infoMessage`, `hintMessage`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ... [api](https://code.visualstudio.com/api/references/vscode-api#ThemableDecorationAttachmentRenderOptions). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensdecorations)",
+					"markdownDescription": "Advanced decoration tweaking. Possible keys: `errorRange`, `warningRange`, `infoRange`, `hintRange`, `errorMessage`, `warningMessage`, `infoMessage`, `hintMessage`.\n\n Possible properties: `backgroundColor`, `color`, `outline`, `border`, ... [api](https://code.visualstudio.com/api/references/vscode-api#ThemableDecorationAttachmentRenderOptions). [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlensdecorations)",
 					"default": {
 						"errorRange": {},
 						"warningRange": {},
@@ -1134,7 +1134,7 @@
 				"errorLens.codeLensEnabled": {
 					"type": "boolean",
 					"default": false,
-					"markdownDescription": "Controls whether to show the Error Lens as a Code Lens above the code. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenscodelensenabled)"
+					"markdownDescription": "Controls whether to show the Error Lens as a Code Lens above the code. [demo](https://github.com/CyberT33N/vscode-error-lens/blob/master/docs/docs.md#errorlenscodelensenabled)"
 				},
 				"errorLens.codeLensLength": {
 					"type": "object",

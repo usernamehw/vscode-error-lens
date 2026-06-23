@@ -377,7 +377,7 @@ export const enum Constants {
 	/**
 	 * Extension unique id (publisher.name).
 	 */
-	ExtensionId = 'usernamehw.errorlens',
+	ExtensionId = 'CyberT33N.errorlens',
 	/**
 	 * Prefix used for all settings of this extension.
 	 */

@@ -216,7 +216,7 @@ function escapeColor(color: string): string {
 }
 
 /**
- * Issue https://github.com/usernamehw/vscode-error-lens/issues/177
+ * Issue https://github.com/CyberT33N/vscode-error-lens/issues/177
  */
 export function updateWorkaroundGutterIcon(editor: TextEditor): void {
 	const ranges: Range[] = [];

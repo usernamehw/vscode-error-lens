@@ -1772,13 +1772,13 @@ Status bar messages can be hard to read, so I'm using [Custom CSS](https://marke
 
 /* ──── Target only Error Lens status bar items ─────────────── */
 /* "errorLens.statusBarMessageEnabled": true, */
-#usernamehw\.errorlens\.errorLensMessage {
+#CyberT33N\.errorlens\.errorLensMessage {
     font-size: 14px !important;
 }
 
 /* "errorLens.statusBarIconsEnabled": true, */
-#usernamehw\.errorlens\.errorLensError {}
-#usernamehw\.errorlens\.errorLensWarning {}
+#CyberT33N\.errorlens\.errorLensError {}
+#CyberT33N\.errorlens\.errorLensWarning {}
 /* ──────────────────────────────────────────────────────────── */
 ```
 
