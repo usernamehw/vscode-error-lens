@@ -1,13 +1,13 @@
 {
 	"name": "errorlens",
-	"displayName": "Error Lens",
+	"displayName": "Error Lens [Secured]",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "3.28.0",
+	"version": "4.0.0",
 	"publisher": "CyberT33N",
 	"license": "MIT",
+	"type": "module",
 	"engines": {
-		"vscode": "^1.107.0",
-		"npm": ">=10.0.0"
+		"vscode": "^1.120.0"
 	},
 	"extensionKind": [
 		"ui",
@@ -34,11 +34,18 @@
 		"type": "git",
 		"url": "https://github.com/CyberT33N/vscode-error-lens"
 	},
+	"packageManager": "pnpm@11.7.0",
+	"devEngines": {
+		"packageManager": {
+			"name": "pnpm",
+			"version": "11.7.0",
+			"onFail": "error"
+		}
+	},
 	"activationEvents": [
 		"onStartupFinished"
 	],
 	"main": "./dist/extension.js",
-	"browser": "./dist/extension.js",
 	"contributes": {
 		"commands": [
 			{
@@ -1465,23 +1472,32 @@
 		]
 	},
 	"scripts": {
-		"vscode:prepublish": "webpack --mode production --color --devtool hidden-source-map",
-		"watch": "webpack --mode development --watch --stats minimal"
+		"typecheck": "tsc --project ./tsconfig.json",
+		"bundle": "node ./esbuild.js",
+		"bundle:prod": "node ./esbuild.js --production",
+		"watch:typecheck": "tsc --watch --preserveWatchOutput --project ./tsconfig.json",
+		"watch:bundle": "node ./esbuild.js --watch",
+		"package": "pnpm run typecheck && pnpm run bundle:prod && node ./scripts/package-vsix.cjs",
+		"smoke:vscode": "node ./test/vscode/runTest.mjs",
+		"verify": "pnpm run package && pnpm run smoke:vscode"
 	},
 	"devDependencies": {
-		"@soda/friendly-errors-webpack-plugin": "^1.8.1",
-		"@types/lodash": "^4.17.16",
-		"@types/node": "^22.19.3",
-		"@types/vscode": "^1.107.0",
-		"@typescript-eslint/eslint-plugin": "^5.62.0",
-		"@typescript-eslint/parser": "^5.62.0",
-		"eslint": "^8.57.1",
-		"ts-loader": "^9.5.2",
-		"typescript": "^5.8.2",
-		"webpack": "^5.98.0",
-		"webpack-cli": "^6.0.1"
+		"@eslint/js": "catalog:",
+		"@stylistic/eslint-plugin": "catalog:",
+		"@types/lodash": "catalog:",
+		"@types/node": "catalog:",
+		"@types/vscode": "catalog:",
+		"@vscode/test-electron": "catalog:",
+		"@vscode/vsce": "catalog:",
+		"esbuild": "catalog:",
+		"eslint": "catalog:",
+		"globals": "catalog:",
+		"jiti": "catalog:",
+		"typescript-eslint": "catalog:",
+		"typescript": "catalog:",
+		"yaml": "catalog:"
 	},
 	"dependencies": {
-		"lodash": "^4.17.21"
+		"lodash": "catalog:"
 	}
 }

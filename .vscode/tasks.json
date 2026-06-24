@@ -2,14 +2,40 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "watch",
-			"group": "build",
+			"label": "watch:typecheck",
+			"type": "shell",
+			"command": "pnpm run watch:typecheck",
 			"isBackground": true,
-			"problemMatcher": [
-				"$ts-webpack-watch",
-				"$tslint-webpack-watch"
-			]
+			"problemMatcher": "$tsc-watch"
+		},
+		{
+			"label": "watch:bundle",
+			"type": "shell",
+			"command": "pnpm run watch:bundle",
+			"isBackground": true,
+			"problemMatcher": {
+				"owner": "esbuild",
+				"pattern": {
+					"regexp": "^(?!)$"
+				},
+				"background": {
+					"activeOnStart": true,
+					"endsPattern": "^esbuild watching$"
+				}
+			}
+		},
+		{
+			"label": "watch",
+			"dependsOn": [
+				"watch:typecheck",
+				"watch:bundle"
+			],
+			"dependsOrder": "parallel",
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"problemMatcher": []
 		}
 	]
 }
