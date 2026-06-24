@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens [Secured]",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "4.0.0",
+	"version": "4.1.0",
 	"publisher": "CyberT33N",
 	"license": "MIT",
 	"type": "module",
@@ -87,7 +87,7 @@
 			{
 				"command": "errorLens.searchForProblem",
 				"title": "Search for problem",
-				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).",
+				"description": "Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting and limited to https URLs).",
 				"category": "Error Lens"
 			},
 			{
@@ -100,12 +100,6 @@
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
 				"description": "Exclude/Include current workspace by fs path.",
-				"category": "Error Lens"
-			},
-			{
-				"command": "errorLens.disableLine",
-				"title": "Disable line",
-				"description": "Add a comment to disable line for linter rule. Comment format is controlled by `\"errorLens.disableLineComments\"` setting.",
 				"category": "Error Lens"
 			},
 			{
@@ -786,19 +780,6 @@
 					},
 					"markdownDescription": "Exclude workspaces by path."
 				},
-				"errorLens.disableLineComments": {
-					"type": "object",
-					"markdownDescription": "Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.\nTo force comment on the same line - add `SAME_LINE` to the message: `\"eslint\": \"// eslint-disable-line $code SAME_LINE\"`",
-					"patternProperties": {
-						".*": {
-							"type": "string"
-						}
-					},
-					"default": {
-						"eslint": "// eslint-disable-next-line $code",
-						"Stylelint": "/* stylelint-disable-next-line $code */"
-					}
-				},
 				"errorLens.lintFilePaths": {
 					"type": "object",
 					"default": {
@@ -837,7 +818,7 @@
 				"errorLens.searchForProblemQuery": {
 					"type": "string",
 					"default": "https://duckduckgo.com/?q=$message",
-					"markdownDescription": "Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command."
+					"markdownDescription": "Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command. Must resolve to an `https://` URL."
 				},
 				"errorLens.selectProblemType": {
 					"type": "string",

@@ -7,6 +7,13 @@ type ColorFormat = `#${string}` | `var(--vscode-${string}`;
 let tempStatusBarItem: StatusBarItem | undefined;
 
 export const vscodeUtils = {
+	escapeHtmlAttribute(value: string): string {
+		return value
+			.replace(/&/gu, '&amp;')
+			.replace(/"/gu, '&quot;')
+			.replace(/</gu, '&lt;')
+			.replace(/>/gu, '&gt;');
+	},
 	/**
 	 * Update global settings.json file with the new setting value.
 	 */
@@ -77,7 +84,7 @@ export const vscodeUtils = {
 			color: 'var(--vscode-button-foreground)',
 		});
 
-		return `<a title="${title}" href="${href}">${buttonText}</a>`;
+		return `<a title="${vscodeUtils.escapeHtmlAttribute(title)}" href="${vscodeUtils.escapeHtmlAttribute(href)}">${buttonText}</a>`;
 	},
 	createProblemIconMarkdown(kind: 'error' | 'info' | 'warning'): string {
 		const colorClass: ColorFormat = kind === 'error' ?
@@ -147,6 +154,9 @@ export const vscodeUtils = {
 				return editor;
 			}
 		}
+	},
+	isAllowedExternalUri(uri: Uri): boolean {
+		return uri.scheme === 'https';
 	},
 	showTempStatusBarNotification({ message, timeout }: { message: string; timeout: number }): void {
 		tempStatusBarItem?.dispose();

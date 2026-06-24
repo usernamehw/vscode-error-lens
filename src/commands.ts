@@ -1,9 +1,9 @@
 import { codeLensOnClickCommand } from 'src/commands/codeLensOnClickCommand';
 import { copyProblemCodeCommand } from 'src/commands/copyProblemCodeCommand';
 import { copyProblemMessageCommand } from 'src/commands/copyProblemMessageCommand';
-import { disableLineCommand } from 'src/commands/disableLineCommand';
 import { excludeProblemCommand } from 'src/commands/excludeProblemCommand';
 import { findLinterRuleDefinitionCommand } from 'src/commands/findLinterRuleDefinitionCommand';
+import { openDiagnosticTargetCommand } from 'src/commands/openDiagnosticTargetCommand';
 import { revealLineCommand } from 'src/commands/revealLineCommand';
 import { searchForProblemCommand } from 'src/commands/searchForProblemCommand';
 import { selectProblemCommand } from 'src/commands/selectProblemCommand';
@@ -38,8 +38,6 @@ export const enum CommandId {
 	FindLinterRuleDefinition = 'errorLens.findLinterRuleDefinition',
 	/** {@link searchForProblemCommand} */
 	SearchForProblem = 'errorLens.searchForProblem',
-	/** {@link disableLineCommand} */
-	DisableLine = 'errorLens.disableLine',
 	/** {@link updateEverythingCommand} */
 	UpdateEverything = 'errorLens.updateEverything',
 	// ──── Internal ──────────────────────────────────────────────
@@ -47,6 +45,8 @@ export const enum CommandId {
 	StatusBarCommand = 'errorLens.statusBarCommand',
 	/** {@link revealLineCommand} */
 	RevealLine = 'errorLens.revealLine',
+	/** {@link openDiagnosticTargetCommand} */
+	OpenDiagnosticTarget = 'errorLens.openDiagnosticTarget',
 	/** {@link excludeProblemCommand} */
 	ExcludeProblem = 'errorLens.excludeProblem',
 	/** {@link codeLensOnClickCommand} */
@@ -84,7 +84,6 @@ export function registerAllCommands(context: ExtensionContext): void {
 	context.subscriptions.push(commands.registerCommand(CommandId.FindLinterRuleDefinition, findLinterRuleDefinitionCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.SearchForProblem, searchForProblemCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemCode, copyProblemCodeCommand));
-	context.subscriptions.push(commands.registerCommand(CommandId.DisableLine, disableLineCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.CopyProblemMessage, copyProblemMessageCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.ExcludeProblem, excludeProblemCommand));
 	// ────────────────────────────────────────────────────────────
@@ -96,5 +95,6 @@ export function registerAllCommands(context: ExtensionContext): void {
 	// ────────────────────────────────────────────────────────────
 	context.subscriptions.push(commands.registerCommand(CommandId.CodeLensOnClick, codeLensOnClickCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.RevealLine, revealLineCommand));
+	context.subscriptions.push(commands.registerCommand(CommandId.OpenDiagnosticTarget, openDiagnosticTargetCommand));
 	context.subscriptions.push(commands.registerCommand(CommandId.StatusBarCommand, statusBarCommand));
 }

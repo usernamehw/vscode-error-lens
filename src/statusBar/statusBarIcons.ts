@@ -153,13 +153,18 @@ export class StatusBarIcons {
 			const uri = diagWithUri[0];
 			const diagnostics = diagWithUri[1];
 			if (diagnostics.length) {
-				markdown.appendMarkdown(`**${utils.basename(uri.path)}** (${diagnostics.length})\n\n`);
+				markdown.appendMarkdown('**');
+				markdown.appendText(utils.basename(uri.path));
+				markdown.appendMarkdown(`** (${diagnostics.length})\n\n`);
 			}
 			for (const diag of diagnostics) {
 				const revealLineUri = Uri.parse(
 					`command:${CommandId.RevealLine}?${encodeURIComponent(JSON.stringify([uri.fsPath, [diag.range.start.line, diag.range.start.character]]))}`,
 				);
-				markdown.appendMarkdown(`<span style="color:${type === 'error' ? 'var(--vscode-editorError-foreground)' : 'var(--vscode-editorWarning-foreground)'};">$(${type})</span> [${diag.message} \`${diag.source ?? '<No source>'}\`](${revealLineUri.toString()})\n\n`);
+				markdown.appendMarkdown(`<span style="color:${type === 'error' ? 'var(--vscode-editorError-foreground)' : 'var(--vscode-editorWarning-foreground)'};">$(${type})</span> [`);
+				markdown.appendText(diag.message);
+				markdown.appendText(` (${diag.source ?? '<No source>'})`);
+				markdown.appendMarkdown(`](${revealLineUri.toString()})\n\n`);
 			}
 		}
 		return markdown;

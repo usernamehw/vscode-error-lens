@@ -2,6 +2,7 @@ import { $config, $state } from 'src/extension';
 import { transmuteSeverity } from 'src/transmute';
 import { Constants, type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
+import { vscodeUtils } from 'src/utils/vscodeUtils';
 import { languages, window, workspace, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 export type GroupedByLineDiagnostics = Record<string, Diagnostic[]>;
@@ -66,8 +67,12 @@ export const extUtils = {
 	/**
 	 * Usually documentation website Uri.
 	 */
-	getDiagnosticTarget(diagnostic: Diagnostic): Uri | false | undefined {
-		return typeof diagnostic.code !== 'number' && typeof diagnostic.code !== 'string' && diagnostic.code?.target;
+	getDiagnosticTarget(diagnostic: Diagnostic): Uri | undefined {
+		const diagnosticTarget = typeof diagnostic.code !== 'number' && typeof diagnostic.code !== 'string' ? diagnostic.code?.target : undefined;
+		if (!diagnosticTarget || !vscodeUtils.isAllowedExternalUri(diagnosticTarget)) {
+			return undefined;
+		}
+		return diagnosticTarget;
 	},
 	getDiagnosticCode(diagnostic: Diagnostic): string | undefined {
 		const code = typeof diagnostic.code === 'string' || typeof diagnostic.code === 'number' ? diagnostic.code :	diagnostic.code?.value;

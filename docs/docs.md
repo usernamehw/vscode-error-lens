@@ -1180,19 +1180,13 @@ Exclude files by using [glob](https://code.visualstudio.com/docs/editor/glob-pat
 
 Exclude the entire workspace from highlighting problems. Related Command: `errorlens.toggleWorkspace` .
 
-### `errorLens.disableLineComments`
-
-Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.
-
-To force comment on the same line - add `SAME_LINE` to the message: `"eslint": "// eslint-disable-line $code SAME_LINE"`
-
 ### `errorLens.lintFilePaths`
 
 Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/docs/editor/glob-patterns) for local linter files). `node_modules` folder is excluded. Used when running `errorLens.findLinterRuleDefinition` command.
 
 ### `errorLens.searchForProblemQuery`
 
-Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.
+Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command. Must resolve to an `https://` URL.
 
 ### `errorLens.selectProblemType`
 

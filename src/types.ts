@@ -325,10 +325,6 @@ interface ExtensionConfigType {
 	 */
 	lintFilePaths: Record<string, string[] | 'none'>;
 	/**
-	 * Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.
-	 */
-	disableLineComments: Record<string, string>;
-	/**
 	 * Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.
 	 */
 	searchForProblemQuery: string;

@@ -1,5 +1,6 @@
 import { CommandId } from 'src/commands';
 import { type RuleDefinitionArgs } from 'src/commands/findLinterRuleDefinitionCommand';
+import { getSearchForProblemUri } from 'src/commands/searchForProblemCommand';
 import { Constants, type ExtensionConfig } from 'src/types';
 import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
@@ -35,6 +36,7 @@ export function createHoverForDiagnostic({
 
 	const diagnosticTarget = extUtils.getDiagnosticTarget(diagnostic);
 	const diagnosticCode = extUtils.getDiagnosticCode(diagnostic);
+	const searchTarget = getSearchForProblemUri(diagnostic);
 
 	// ──── Message ───────────────────────────────────────────────
 	if (messageEnabled) {
@@ -63,7 +65,8 @@ export function createHoverForDiagnostic({
 			title: 'Copy problem mesage into the clipboard.',
 		});
 		markdown.appendMarkdown('\n\n');
-		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'}(\`${diagnosticCode ?? '<No code>'}\`) `);
+		markdown.appendText(diagnostic.source ?? '<No source>');
+		markdown.appendText(` (${diagnosticCode ?? '<No code>'}) `);
 
 		markdown.appendMarkdown(copyMessageButton);
 		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
@@ -89,11 +92,6 @@ export function createHoverForDiagnostic({
 			href: vscodeUtils.createCommandUri(CommandId.SearchForProblem, diagnostic).toString(),
 			title: 'Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).',
 		});
-		const disableLineButton = vscodeUtils.createButtonLinkMarkdown({
-			text: '$(arrow-circle-up) Disable line',
-			href: vscodeUtils.createCommandUri(CommandId.DisableLine, diagnostic).toString(),
-			title: 'Add comment to disable linter rule for this line.',
-		});
 
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(excludeProblemButton);
@@ -109,18 +107,15 @@ export function createHoverForDiagnostic({
 			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
 			const openDocsButton = vscodeUtils.createButtonLinkMarkdown({
 				text: '$(book) Docs',
-				href: vscodeUtils.createCommandUri(Constants.VscodeOpenCommandId, diagnosticTarget).toString(),
-				title: 'Open diagnostic code or search it in default browser.',
+				href: vscodeUtils.createCommandUri(CommandId.OpenDiagnosticTarget, diagnosticTarget.toString()).toString(),
+				title: 'Open diagnostic docs in the default browser.',
 			});
 			markdown.appendMarkdown(openDocsButton);
 		}
 
-		markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
-		markdown.appendMarkdown(searchForProblemButton);
-
-		if (sourceIsLinter) {
+		if (searchTarget) {
 			markdown.appendMarkdown(Constants.NonBreakingSpaceSymbolHtml.repeat(2));
-			markdown.appendMarkdown(disableLineButton);
+			markdown.appendMarkdown(searchForProblemButton);
 		}
 	}
 

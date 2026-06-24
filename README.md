@@ -32,7 +32,7 @@ pnpm run verify
 - Show message in status bar
 
 <!-- COMMANDS_START -->
-## Commands (15)
+## Commands (14)
 
 |Command|Description|
 |-|-|
@@ -42,10 +42,9 @@ pnpm run verify
 |errorLens.toggleInfo|Error Lens: Enable/Disable Info in `"errorLens.enabledDiagnosticLevels"` setting.|
 |errorLens.toggleHint|Error Lens: Enable/Disable Hint in `"errorLens.enabledDiagnosticLevels"` setting.|
 |errorLens.toggleInlineMessage|Error Lens: Toggle global setting `"errorLens.messageEnabled"`.|
-|errorLens.searchForProblem|Error Lens: Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting).|
+|errorLens.searchForProblem|Error Lens: Open problem in default browser (controlled by `errorLens.searchForProblemQuery` setting and limited to `https://` URLs).|
 |errorLens.selectProblem|Error Lens: Set editor selection to the problem range (controlled by `errorLens.selectProblemType` setting).|
 |errorlens.toggleWorkspace|Error Lens: Exclude/Include current workspace by fs path.|
-|errorLens.disableLine|Error Lens: Add a comment to disable line for linter rule. Comment format is controlled by `"errorLens.disableLineComments"` setting.|
 |errorLens.findLinterRuleDefinition|Error Lens: Search in local linter files (like `.eslintrc.json`) for the rule definition. Target files are controlled by "errorLens.lintFilePaths" setting.|
 |errorLens.copyProblemMessage|Error Lens: Copy problem message to the clipboard (at the active cursor).|
 |errorLens.excludeProblem|Error Lens: Exclude problem (at the active cursor) (write into settings).|
@@ -53,7 +52,7 @@ pnpm run verify
 |errorLens.updateEverything|Error Lens: Update all decorations. Supports args {"kind": "update" \| "clear"}|
 <!-- COMMANDS_END -->
 <!-- SETTINGS_START -->
-## Settings (75)
+## Settings (74)
 
 > **Error Lens** extension settings start with `errorLens.`
 
@@ -98,9 +97,8 @@ pnpm run verify
 |excludeBySource|\[\]|Specify `source` or `source(code)` pair to exclude. Examples:<br>- `eslint` disable all ESLint problems<br>- `eslint(padded-blocks)` disable `padded-blocks` rule of ESLint<br>- `Pylance` disable all Pylance linter problems<br>- `Pylance(reportUndefinedVariable)` disable `reportUndefinedVariable` rule of Pylance|
 |excludePatterns|\[\]|Exclude files by using [glob](https://code.visualstudio.com/docs/editor/glob-patterns) pattern. Example `["**/*.{ts,js}"]`|
 |excludeWorkspaces|\[\]|Exclude workspaces by path.|
-|disableLineComments|\{...\}|Used for `errorLens.disableLine` command that adds a comment disabling linter rule for a line.<br>To force comment on the same line - add `SAME_LINE` to the message: `"eslint": "// eslint-disable-line $code SAME_LINE"`|
 |lintFilePaths|\{...\}|Specify where to search for linter rule definitions by diagnostic source ([glob](https://code.visualstudio.com/docs/editor/glob-patterns) for local linter files). `node_modules` folder is excluded.|
-|searchForProblemQuery|"https://duckduckgo.com/?q=$message"|Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command.|
+|searchForProblemQuery|"https://duckduckgo.com/?q=$message"|Pick query to open in default browser when searching for problem with `errorLens.searchForProblem` command. Must resolve to an `https://` URL.|
 |selectProblemType|"closestProblem"|Which problem to select (closest / active line) when executing `errorLens.selectProblem` command.|
 |light||Specify color of decorations for when the light color theme is active.|
 |delay|**0**|Delay (ms) before showing problem decorations (**0** to disable). Minimum delay of **500** is enforced by the extension. `#errorLens.delayMode#` controls how to handle the delay.|

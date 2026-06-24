@@ -14,7 +14,6 @@
 	],
 	"contributions.settings.addSpaceAfterCommaInDefaultValue": true,
 	"contributions.settings.replaceDefaultValue": {
-		"errorLens.disableLineComments": "\\{...\\}",
 		"errorLens.lintFilePaths": "\\{...\\}",
 		"errorLens.experimental": "\\{...\\}",
 	},
