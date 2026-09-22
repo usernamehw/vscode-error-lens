@@ -93,8 +93,8 @@ interface ExtensionConfigType {
 	 */
 	messageMaxChars: number;
 	/**
-	 * Stop rendering inline messages when a file has more lines with problems than this value.
-	 * `0` - no limit.
+	 * Limit inline messages to the lines currently visible in the editor when a file has more
+	 * lines with problems than this value. `0` - no limit.
 	 */
 	maxInlineMessages: number;
 	/**
