@@ -1,6 +1,6 @@
 import { registerAllCommands } from 'src/commands';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
-import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
+import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCloseTextDocumentListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { StatusBarIcons } from 'src/statusBar/statusBarIcons';
 import { StatusBarMessage } from 'src/statusBar/statusBarMessage';
 import { Constants, type ExtensionConfig } from 'src/types';
@@ -200,6 +200,7 @@ export function updateEverything(context: ExtensionContext): void {
 	updateCursorChangeListener();
 	updateChangedActiveTextEditorListener();
 	updateChangeBreakpointsListener();
+	updateCloseTextDocumentListener();
 	// updateOnVisibleRangesListener();
 }
 /**
