@@ -329,6 +329,12 @@
 					"minimum": 0,
 					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagemaxchars)"
 				},
+				"errorLens.maxInlineMessages": {
+					"type": "integer",
+					"default": 1000,
+					"minimum": 0,
+					"markdownDescription": "Stop rendering inline messages when a file has more lines with problems than this value. VSCode creates a separate set of CSS rules for every distinct inline message, so a file with thousands of problems can freeze the editor for a long time. Line highlighting, gutter icons, problem range decorations, hovers and status bar are not affected. `0` - no limit."
+				},
 				"errorLens.severityText": {
 					"type": "array",
 					"items": {

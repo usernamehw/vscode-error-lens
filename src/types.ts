@@ -93,6 +93,11 @@ interface ExtensionConfigType {
 	 */
 	messageMaxChars: number;
 	/**
+	 * Stop rendering inline messages when a file has more lines with problems than this value.
+	 * `0` - no limit.
+	 */
+	maxInlineMessages: number;
+	/**
 	 * Replaces `$severity` variable in `#errorLens.messageTemplate#`.
 	 */
 	severityText: string[];

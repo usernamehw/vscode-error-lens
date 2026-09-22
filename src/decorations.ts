@@ -48,6 +48,12 @@ export const decorationRenderOptions = {} as unknown as Record<'error' | 'warnin
 let textDecorationStyleString = '';
 
 /**
+ * Uri strings of documents for which the user was already told that inline messages
+ * are hidden by `errorLens.maxInlineMessages`.
+ */
+const documentsNotifiedAboutHiddenInlineMessages = new Set<string>();
+
+/**
  * Update all decoration styles: editor, gutter, status bar
  */
 export function setDecorationStyle(context: ExtensionContext): void {
@@ -538,6 +544,20 @@ function doUpdateDecorations({
 		}
 	}
 
+	const linesWithInlineMessage = decorationsError.length + decorationsWarning.length + decorationsInfo.length + decorationsHint.length;
+	const hideInlineMessages = extUtils.shouldShowInlineMessage() &&
+		$config.maxInlineMessages > 0 &&
+		linesWithInlineMessage > $config.maxInlineMessages;
+
+	notifyAboutHiddenInlineMessages({ editor, hideInlineMessages, linesWithInlineMessage });
+
+	if (hideInlineMessages) {
+		removeRenderOptions(decorationsError);
+		removeRenderOptions(decorationsWarning);
+		removeRenderOptions(decorationsInfo);
+		removeRenderOptions(decorationsHint);
+	}
+
 	if (extUtils.shouldShowGutterIcons()) {
 		updateWorkaroundGutterIcon(editor);
 	}
@@ -588,6 +608,53 @@ function doUpdateDecorations({
 	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
 
 	$state.codeLens?.update();
+}
+
+/**
+ * The property must be absent, not emptied: any `renderOptions` object, even an empty one,
+ * makes the renderer register a CSS subtype instead of reusing the base decoration type.
+ */
+function removeRenderOptions(decorations: DecorationWithDiagnostic[]): void {
+	for (const decoration of decorations) {
+		delete decoration.options.renderOptions;
+	}
+}
+/**
+ * Show a status bar notification at most once per document.
+ */
+function notifyAboutHiddenInlineMessages({
+	editor,
+	hideInlineMessages,
+	linesWithInlineMessage,
+}: {
+	editor: TextEditor;
+	hideInlineMessages: boolean;
+	linesWithInlineMessage: number;
+}): void {
+	const documentKey = editor.document.uri.toString(true);
+
+	if (!hideInlineMessages) {
+		documentsNotifiedAboutHiddenInlineMessages.delete(documentKey);
+		return;
+	}
+
+	if (documentsNotifiedAboutHiddenInlineMessages.has(documentKey)) {
+		return;
+	}
+	documentsNotifiedAboutHiddenInlineMessages.add(documentKey);
+
+	const message = `Error Lens: inline messages hidden (${linesWithInlineMessage} lines with problems > errorLens.maxInlineMessages)`;
+	$state.log(message);
+	vscodeUtils.showTempStatusBarNotification({
+		message,
+		timeout: 5000,
+	});
+}
+/**
+ * Allow the notification about hidden inline messages to be shown again for this document.
+ */
+export function forgetHiddenInlineMessagesNotification(uri: Uri): void {
+	documentsNotifiedAboutHiddenInlineMessages.delete(uri.toString(true));
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {

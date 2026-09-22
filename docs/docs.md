@@ -552,6 +552,10 @@ Template used for all inline messages. Possible variables:
 </tbody>
 </table>
 
+### `errorLens.maxInlineMessages`
+
+Stop rendering inline messages when a file has more lines with problems than this value. VSCode creates a separate set of CSS rules for every distinct inline message, so a file with thousands of problems can freeze the editor for a long time. Line highlighting, gutter icons, problem range decorations, hovers and status bar are not affected. `0` - no limit.
+
 ### `errorLens.severityText`
 
 Replaces `$severity` variable in [errorLens.messageTemplate](#errorlensmessagetemplate).
