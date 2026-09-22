@@ -3,7 +3,7 @@ import { getStyleForAlignment } from 'src/decorations/align';
 import { $config, $state } from 'src/extension';
 import { doUpdateGutterDecorations, getGutterStyles, updateWorkaroundGutterIcon, type Gutter } from 'src/gutter';
 import { createHoverForDiagnostic } from 'src/hover/hover';
-import { disposeTransmutedDecorations, doUpdateTransmutedDecorations, setTransmutedDecorationStyle, transmute } from 'src/transmute';
+import { disposeTransmutedDecorations, doUpdateTransmutedDecorations, setTransmutedDecorationStyle, transmute, type DecorationWithDiagnostic } from 'src/transmute';
 import { extUtils, type GroupedByLineDiagnostics } from 'src/utils/extUtils';
 import { utils } from 'src/utils/utils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
@@ -367,10 +367,10 @@ function doUpdateDecorations({
 }): void {
 	$state.log('doUpdateDecorations()', editor.document.uri.toString(true));
 
-	let decorationOptionsError: DecorationOptions[] = [];
-	let decorationOptionsWarning: DecorationOptions[] = [];
-	let decorationOptionsInfo: DecorationOptions[] = [];
-	let decorationOptionsHint: DecorationOptions[] = [];
+	const decorationsError: DecorationWithDiagnostic[] = [];
+	const decorationsWarning: DecorationWithDiagnostic[] = [];
+	const decorationsInfo: DecorationWithDiagnostic[] = [];
+	const decorationsHint: DecorationWithDiagnostic[] = [];
 
 	const decorationOptionsErrorRange: DecorationOptions[] = [];
 	const decorationOptionsWarningRange: DecorationOptions[] = [];
@@ -440,11 +440,11 @@ function doUpdateDecorations({
 			}
 		}
 
+		// The renderer creates one CSS subtype per distinct render options object,
+		// keyed by a hash of its contents, so this must not hold per-problem data.
 		const decInstanceRenderOptions: DecorationInstanceRenderOptions = {
 			after: {
 				contentText: message,
-				// @ts-expect-error need for `transmute` feature
-				problem: diagnostic,
 				// height: extUtils.shouldAlign() && $config.alignMessage.useFixedPosition ? '100%' : undefined,
 				textDecoration: extUtils.shouldAlign() ? `${textDecorationStyleString};${alignMarginStyle}` : undefined,
 			},
@@ -499,7 +499,7 @@ function doUpdateDecorations({
 
 		switch (severity) {
 			case DiagnosticSeverity.Error: {
-				decorationOptionsError.push(diagnosticDecorationOptions);
+				decorationsError.push({ options: diagnosticDecorationOptions, diagnostic });
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsErrorRange.push({
 						range: messageRange,
@@ -508,7 +508,7 @@ function doUpdateDecorations({
 				break;
 			}
 			case DiagnosticSeverity.Warning: {
-				decorationOptionsWarning.push(diagnosticDecorationOptions);
+				decorationsWarning.push({ options: diagnosticDecorationOptions, diagnostic });
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsWarningRange.push({
 						range: messageRange,
@@ -517,7 +517,7 @@ function doUpdateDecorations({
 				break;
 			}
 			case DiagnosticSeverity.Information: {
-				decorationOptionsInfo.push(diagnosticDecorationOptions);
+				decorationsInfo.push({ options: diagnosticDecorationOptions, diagnostic });
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsInfoRange.push({
 						range: messageRange,
@@ -526,7 +526,7 @@ function doUpdateDecorations({
 				break;
 			}
 			case DiagnosticSeverity.Hint: {
-				decorationOptionsHint.push(diagnosticDecorationOptions);
+				decorationsHint.push({ options: diagnosticDecorationOptions, diagnostic });
 				if ($config.problemRangeDecorationEnabled) {
 					decorationOptionsHintRange.push({
 						range: messageRange,
@@ -542,12 +542,17 @@ function doUpdateDecorations({
 		updateWorkaroundGutterIcon(editor);
 	}
 
+	let decorationOptionsError: DecorationOptions[];
+	let decorationOptionsWarning: DecorationOptions[];
+	let decorationOptionsInfo: DecorationOptions[];
+	let decorationOptionsHint: DecorationOptions[];
+
 	if ($state.transmuteExists) {
 		const transmutedDecorations = transmute({
-			decorationOptionsError,
-			decorationOptionsWarning,
-			decorationOptionsInfo,
-			decorationOptionsHint,
+			decorationsError,
+			decorationsWarning,
+			decorationsInfo,
+			decorationsHint,
 			decorationRenderBase: decorationRenderOptions,
 		});
 
@@ -557,6 +562,11 @@ function doUpdateDecorations({
 		decorationOptionsHint = transmutedDecorations.nonTransmuted.hint;
 
 		doUpdateTransmutedDecorations(transmutedDecorations.transmuted, editor);
+	} else {
+		decorationOptionsError = decorationsError.map(decoration => decoration.options);
+		decorationOptionsWarning = decorationsWarning.map(decoration => decoration.options);
+		decorationOptionsInfo = decorationsInfo.map(decoration => decoration.options);
+		decorationOptionsHint = decorationsHint.map(decoration => decoration.options);
 	}
 
 	editor.setDecorations(decorationTypes.error, decorationOptionsError);
