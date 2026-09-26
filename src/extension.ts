@@ -1,4 +1,6 @@
 import { registerAllCommands } from 'src/commands';
+import { disposeAllDecorations, forgetInlineMessagesViewportLimit, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
+import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener, updateOnVisibleRangesListener } from 'src/events';
 import { disposeAllDecorations, forgetHiddenInlineMessagesNotification, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
 import { disposeAllEventListeners, updateChangeBreakpointsListener, updateChangeDiagnosticListener, updateChangeVisibleTextEditorsListener, updateChangedActiveTextEditorListener, updateCursorChangeListener, updateOnSaveListener } from 'src/events';
 import { disposeAllDecorations, setDecorationStyle, updateDecorationsForAllVisibleEditors } from 'src/decorations';
@@ -88,10 +90,6 @@ export abstract class $state {
 	 */
 	static renderGutterIconsAsSeparateDecoration: boolean;
 	/**
-	 * Set event listener for when editor visibleRanges change (vertical scroll), only when necessary.
-	 */
-	static shouldUpdateOnEditorScrollEvent: boolean;
-	/**
 	 * Use console.log() when developing extension.
 	 */
 	static logger: Logger;
@@ -131,7 +129,7 @@ export function activate(context: ExtensionContext): void {
 	}
 
 	context.subscriptions.push(workspace.onDidCloseTextDocument(document => {
-		forgetHiddenInlineMessagesNotification(document.uri);
+		forgetInlineMessagesViewportLimit(document.uri);
 	}));
 
 	context.subscriptions.push(workspace.onDidChangeConfiguration(e => {
@@ -161,8 +159,6 @@ export function updateEverything(context: ExtensionContext): void {
 	$state.renderGutterIconsAsSeparateDecoration = $config.gutterIconsEnabled &&
 		$config.gutterIconsFollowCursorOverride &&
 		$config.followCursor !== 'allLines';
-
-	$state.shouldUpdateOnEditorScrollEvent = false;
 
 	$state.statusBarMessage?.dispose();
 	$state.statusBarIcons?.dispose();
@@ -206,8 +202,7 @@ export function updateEverything(context: ExtensionContext): void {
 	updateCursorChangeListener();
 	updateChangedActiveTextEditorListener();
 	updateChangeBreakpointsListener();
-	updateCloseTextDocumentListener();
-	// updateOnVisibleRangesListener();
+	updateOnVisibleRangesListener();
 }
 /**
  * - Create `RegExp` from string for messages.

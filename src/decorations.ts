@@ -48,10 +48,23 @@ export const decorationRenderOptions = {} as unknown as Record<'error' | 'warnin
 let textDecorationStyleString = '';
 
 /**
- * Uri strings of documents for which the user was already told that inline messages
- * are hidden by `errorLens.maxInlineMessages`.
+ * Uri strings of documents whose inline messages are currently restricted to the visible
+ * lines by `errorLens.maxInlineMessages`.
  */
-const documentsNotifiedAboutHiddenInlineMessages = new Set<string>();
+const documentsWithInlineMessagesLimitedToViewport = new Set<string>();
+
+/**
+ * Uri strings of documents the user was already told about the viewport limit for. Kept apart
+ * from the state above, which empties whenever decorations are cleared (`onSave`, `delayMode`),
+ * so that the notification is not repeated on every save or keystroke.
+ */
+const documentsNotifiedAboutViewportLimit = new Set<string>();
+
+/**
+ * Lines kept on each side of a visible range, so that short scrolls stay within
+ * the already rendered messages.
+ */
+const viewportLineBuffer = 20;
 
 /**
  * Update all decoration styles: editor, gutter, status bar
@@ -361,15 +374,19 @@ export function clearDecorations({ editor }: { editor: TextEditor | undefined })
 /**
  * Actually apply decorations for editor.
  * @param range Only allow decorating lines in this range.
+ * @param isViewportRefresh Only the visible lines moved, the diagnostics are the same as on the
+ * previous render, so everything that depends on them alone can be left as it is.
  */
 function doUpdateDecorations({
 	editor,
 	groupedDiagnostics,
 	range,
+	isViewportRefresh,
 }: {
 	editor: TextEditor;
 	groupedDiagnostics: GroupedByLineDiagnostics;
 	range?: Range;
+	isViewportRefresh?: boolean;
 }): void {
 	$state.log('doUpdateDecorations()', editor.document.uri.toString(true));
 
@@ -545,17 +562,18 @@ function doUpdateDecorations({
 	}
 
 	const linesWithInlineMessage = decorationsError.length + decorationsWarning.length + decorationsInfo.length + decorationsHint.length;
-	const hideInlineMessages = extUtils.shouldShowInlineMessage() &&
+	const limitInlineMessagesToViewport = extUtils.shouldShowInlineMessage() &&
 		$config.maxInlineMessages > 0 &&
 		linesWithInlineMessage > $config.maxInlineMessages;
 
-	notifyAboutHiddenInlineMessages({ editor, hideInlineMessages, linesWithInlineMessage });
+	updateInlineMessagesViewportLimitState({ editor, limitInlineMessagesToViewport, linesWithInlineMessage });
 
-	if (hideInlineMessages) {
-		removeRenderOptions(decorationsError);
-		removeRenderOptions(decorationsWarning);
-		removeRenderOptions(decorationsInfo);
-		removeRenderOptions(decorationsHint);
+	if (limitInlineMessagesToViewport) {
+		const visibleLineRanges = getExpandedVisibleLineRanges(editor);
+		removeRenderOptionsOutsideOfLineRanges(decorationsError, visibleLineRanges);
+		removeRenderOptionsOutsideOfLineRanges(decorationsWarning, visibleLineRanges);
+		removeRenderOptionsOutsideOfLineRanges(decorationsInfo, visibleLineRanges);
+		removeRenderOptionsOutsideOfLineRanges(decorationsHint, visibleLineRanges);
 	}
 
 	if (extUtils.shouldShowGutterIcons()) {
@@ -605,45 +623,63 @@ function doUpdateDecorations({
 		doUpdateGutterDecorations(editor, groupedDiagnostics);
 	}
 
-	$state.statusBarMessage.updateText(editor, groupedDiagnostics);
-
-	$state.codeLens?.update();
+	if (!isViewportRefresh) {
+		$state.statusBarMessage.updateText(editor, groupedDiagnostics);
+		// Refreshing Code Lens asks the provider for the whole document over RPC.
+		$state.codeLens?.update();
+	}
 }
 
+/**
+ * Visible ranges already exclude folded regions. An empty list means the editor has not been
+ * laid out yet, in which case no line counts as visible.
+ */
+function getExpandedVisibleLineRanges(editor: TextEditor): { start: number; end: number }[] {
+	return editor.visibleRanges.map(visibleRange => ({
+		start: visibleRange.start.line - viewportLineBuffer,
+		end: visibleRange.end.line + viewportLineBuffer,
+	}));
+}
 /**
  * The property must be absent, not emptied: any `renderOptions` object, even an empty one,
  * makes the renderer register a CSS subtype instead of reusing the base decoration type.
  */
-function removeRenderOptions(decorations: DecorationWithDiagnostic[]): void {
+function removeRenderOptionsOutsideOfLineRanges(decorations: DecorationWithDiagnostic[], lineRanges: { start: number; end: number }[]): void {
 	for (const decoration of decorations) {
+		const line = decoration.options.range.start.line;
+		if (lineRanges.some(lineRange => line >= lineRange.start && line <= lineRange.end)) {
+			continue;
+		}
 		delete decoration.options.renderOptions;
 	}
 }
 /**
- * Show a status bar notification at most once per document.
+ * Remember which documents render inline messages only for the viewport (the scroll listener
+ * only re-renders those) and tell the user about it once per document.
  */
-function notifyAboutHiddenInlineMessages({
+function updateInlineMessagesViewportLimitState({
 	editor,
-	hideInlineMessages,
+	limitInlineMessagesToViewport,
 	linesWithInlineMessage,
 }: {
 	editor: TextEditor;
-	hideInlineMessages: boolean;
+	limitInlineMessagesToViewport: boolean;
 	linesWithInlineMessage: number;
 }): void {
 	const documentKey = editor.document.uri.toString(true);
 
-	if (!hideInlineMessages) {
-		documentsNotifiedAboutHiddenInlineMessages.delete(documentKey);
+	if (!limitInlineMessagesToViewport) {
+		documentsWithInlineMessagesLimitedToViewport.delete(documentKey);
 		return;
 	}
+	documentsWithInlineMessagesLimitedToViewport.add(documentKey);
 
-	if (documentsNotifiedAboutHiddenInlineMessages.has(documentKey)) {
+	if (documentsNotifiedAboutViewportLimit.has(documentKey)) {
 		return;
 	}
-	documentsNotifiedAboutHiddenInlineMessages.add(documentKey);
+	documentsNotifiedAboutViewportLimit.add(documentKey);
 
-	const message = `Error Lens: inline messages hidden (${linesWithInlineMessage} lines with problems > errorLens.maxInlineMessages)`;
+	const message = `Error Lens: inline messages limited to visible lines (${linesWithInlineMessage} lines with problems > errorLens.maxInlineMessages)`;
 	$state.log(message);
 	vscodeUtils.showTempStatusBarNotification({
 		message,
@@ -651,10 +687,15 @@ function notifyAboutHiddenInlineMessages({
 	});
 }
 /**
- * Allow the notification about hidden inline messages to be shown again for this document.
+ * Whether inline messages for this document are currently rendered only for the visible lines.
  */
-export function forgetHiddenInlineMessagesNotification(uri: Uri): void {
-	documentsNotifiedAboutHiddenInlineMessages.delete(uri.toString(true));
+export function isInlineMessagesLimitedToViewport(uri: Uri): boolean {
+	return documentsWithInlineMessagesLimitedToViewport.has(uri.toString(true));
+}
+export function forgetInlineMessagesViewportLimit(uri: Uri): void {
+	const documentKey = uri.toString(true);
+	documentsWithInlineMessagesLimitedToViewport.delete(documentKey);
+	documentsNotifiedAboutViewportLimit.delete(documentKey);
 }
 
 export function updateDecorationsForAllVisibleEditors(): void {
@@ -682,11 +723,13 @@ export function updateDecorationsForUri({
 	editor,
 	groupedDiagnostics,
 	range,
+	isViewportRefresh,
 }: {
 	uri: Uri;
 	editor?: TextEditor;
 	groupedDiagnostics?: GroupedByLineDiagnostics;
 	range?: Range;
+	isViewportRefresh?: boolean;
 }): void {
 	if (editor === undefined) {
 		editor = vscodeUtils.getEditorByUri(uri);
@@ -712,6 +755,7 @@ export function updateDecorationsForUri({
 		editor,
 		groupedDiagnostics: groupedDiagnostics ?? extUtils.groupDiagnosticsByLine(languages.getDiagnostics(uri)),
 		range,
+		isViewportRefresh,
 	});
 }
 

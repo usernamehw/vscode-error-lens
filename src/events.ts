@@ -1,5 +1,6 @@
 import debounce from 'lodash/debounce';
-import { clearDecorations, updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
+import throttle from 'lodash/throttle';
+import { clearDecorations, isInlineMessagesLimitedToViewport, updateDecorationsForAllVisibleEditors, updateDecorationsForUri } from 'src/decorations';
 import { CustomDelay } from 'src/delay/CustomDelay';
 import { NewDelay } from 'src/delay/NewDelay';
 import { $config, $state } from 'src/extension';
@@ -200,27 +201,39 @@ function caretMovedToAnotherLine(selections: readonly Selection[], lastPositionL
 		lastPositionLine !== selections[0].active.line;
 }
 
-// export function updateOnVisibleRangesListener(): void {
-// 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
+/**
+ * Refresh every editor that renders inline messages only for its viewport. Scroll events fire
+ * for every scrolled line, so this is throttled; refreshing all of them at once instead of only
+ * the scrolled one keeps a busy editor from starving the others.
+ */
+const updateViewportLimitedEditorsThrottled = throttle(() => {
+	for (const editor of window.visibleTextEditors) {
+		if (!isInlineMessagesLimitedToViewport(editor.document.uri)) {
+			continue;
+		}
+		updateDecorationsForUri({
+			uri: editor.document.uri,
+			editor,
+			isViewportRefresh: true,
+		});
+	}
+}, 100, {
+	leading: true,
+	trailing: true,
+});
+/**
+ * Update listener for when editor visible ranges change (scrolling, folding, resizing).
+ */
+export function updateOnVisibleRangesListener(): void {
+	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
 
-// 	if (!$state.shouldUpdateOnEditorScrollEvent) {
-// 		return;
-// 	}
-
-// 	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
-// 		$state.log('scrolling');
-
-// 		updateDecorationsForUri({
-// 			uri: e.textEditor.document.uri,
-// 			editor: e.textEditor,
-// 		});
-// 		// throttle(() => {
-
-// 		// }, 300, {
-// 		// 	leading: false,
-// 		// });
-// 	});
-// }
+	onDidChangeTextEditorVisibleRangesDisposable = window.onDidChangeTextEditorVisibleRanges(e => {
+		if (!isInlineMessagesLimitedToViewport(e.textEditor.document.uri)) {
+			return;
+		}
+		updateViewportLimitedEditorsThrottled();
+	});
+}
 /**
  * Update listener for when user performs manual save.
  *
@@ -283,6 +296,7 @@ export function disposeAllEventListeners(): void {
 	onDidCursorChangeDisposable?.dispose();
 	onDidChangeBreakpoints?.dispose();
 	onDidChangeTextEditorVisibleRangesDisposable?.dispose();
+	updateViewportLimitedEditorsThrottled.cancel();
 	onDidSaveTextDocumentDisposable?.dispose();
 	onDidChangeTextDocumentForOnSaveDisposable?.dispose();
 	onDidCloseTextDocumentDisposable?.dispose();
