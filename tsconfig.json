@@ -6,6 +6,9 @@
 		"lib": [
 			"ES2020"
 		],
+		"types": [
+			"node"
+		],
 		"baseUrl": ".",
 		"paths": {
 			"src/*": [
