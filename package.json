@@ -728,7 +728,7 @@
 							}
 						}
 					},
-					"markdownDescription": "Change editor decoration for specific problems (only severity for now)."
+					"markdownDescription": "Change severity or editor decoration for specific problems. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)"
 				},
 				"errorLens.excludeByMessage": {
 					"type": "array",

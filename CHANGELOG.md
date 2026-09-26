@@ -1,3 +1,9 @@
+## 3.29.0 `26 Sep 2026`
+
+- ⚡perf: Render diagnostics only for visible lines when there are many problems in 1 file (>1000) [PR 274](https://github.com/usernamehw/vscode-error-lens/pull/274) by [edusperoni](https://github.com/edusperoni)
+    - New setting `"errorLens.maxInlineMessages"`
+- ⚡perf: Batch diagnostic events & cache merge conflict scan (`"errorLens.enabledInMergeConflict"` setting). [PR 271](https://github.com/usernamehw/vscode-error-lens/pull/271) by [edusperoni](https://github.com/edusperoni)
+
 ## 3.28.0 `29 Jan 2026`
 
 - ✨ Pick a problem by (message/source/code) and change its visual style `"errorLens.transmute"` setting. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)
