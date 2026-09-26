@@ -7,7 +7,7 @@ import { $config, $state } from 'src/extension';
 import { updateWorkaroundGutterIcon } from 'src/gutter';
 import { extUtils } from 'src/utils/extUtils';
 import { vscodeUtils } from 'src/utils/vscodeUtils';
-import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection } from 'vscode';
+import { TextDocumentSaveReason, debug, languages, window, workspace, type DiagnosticChangeEvent, type Disposable, type Selection, type Uri } from 'vscode';
 
 let onDidChangeDiagnosticsDisposable: Disposable | undefined;
 let onDidChangeActiveTextEditor: Disposable | undefined;
@@ -15,11 +15,19 @@ let onDidChangeVisibleTextEditors: Disposable | undefined;
 let onDidCursorChangeDisposable: Disposable | undefined;
 let onDidChangeBreakpoints: Disposable | undefined;
 let onDidChangeTextEditorVisibleRangesDisposable: Disposable | undefined;
+let onDidCloseTextDocumentDisposable: Disposable | undefined;
 
 let onDidChangeTextDocumentForOnSaveDisposable: Disposable | undefined;
 let onDidSaveTextDocumentDisposable: Disposable | undefined;
 
 let newDelay: NewDelay | undefined;
+
+/**
+ * Uris accumulated from diagnostic change events that happened before the pending flush.
+ * Keyed by uri string, since every event can carry a different `Uri` object for the same document.
+ */
+const pendingDiagnosticUris = new Map<string, Uri>();
+let pendingDiagnosticsTimerId: NodeJS.Timeout | undefined;
 
 /**
  * Update listener for when active editor changes.
@@ -53,13 +61,13 @@ export function updateChangeVisibleTextEditorsListener(): void {
 	onDidChangeVisibleTextEditors = window.onDidChangeVisibleTextEditors(updateDecorationsForAllVisibleEditors);
 }
 
-function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): void {
+function onChangedDiagnostics(uris: readonly Uri[]): void {
 	const notebookCellVisible = window.visibleTextEditors.filter(editor => editor.document.uri.scheme === 'vscode-notebook-cell').length !== 0;
 	if (notebookCellVisible) {
 		updateDecorationsForAllVisibleEditors();
 		return;
 	} else {
-		for (const uri of diagnosticChangeEvent.uris) {
+		for (const uri of uris) {
 			for (const editor of window.visibleTextEditors) {
 				if (uri.toString(true) === editor.document.uri.toString(true)) {
 					$state.log('onChangedDiagnostics()');
@@ -76,10 +84,39 @@ function onChangedDiagnostics(diagnosticChangeEvent: DiagnosticChangeEvent): voi
 }
 
 /**
+ * Merge diagnostic change events that arrive within the same tick into a single update.
+ */
+function onChangedDiagnosticsCoalesced(diagnosticChangeEvent: DiagnosticChangeEvent): void {
+	for (const uri of diagnosticChangeEvent.uris) {
+		pendingDiagnosticUris.set(uri.toString(true), uri);
+	}
+
+	if (pendingDiagnosticsTimerId !== undefined) {
+		return;
+	}
+
+	pendingDiagnosticsTimerId = setTimeout(() => {
+		pendingDiagnosticsTimerId = undefined;
+		const uris = [...pendingDiagnosticUris.values()];
+		pendingDiagnosticUris.clear();
+		onChangedDiagnostics(uris);
+	}, 0);
+}
+
+function disposePendingDiagnostics(): void {
+	if (pendingDiagnosticsTimerId !== undefined) {
+		clearTimeout(pendingDiagnosticsTimerId);
+		pendingDiagnosticsTimerId = undefined;
+	}
+	pendingDiagnosticUris.clear();
+}
+
+/**
  * Update listener for when language server (or extension) sends diagnostic change events.
  */
 export function updateChangeDiagnosticListener(): void {
 	onDidChangeDiagnosticsDisposable?.dispose();
+	disposePendingDiagnostics();
 
 	if ($config.onSave) {
 		// onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(e => {
@@ -98,7 +135,7 @@ export function updateChangeDiagnosticListener(): void {
 			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(customDelay.onDiagnosticChange);
 		} else if ($config.delayMode === 'debounce') {
 			onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(debounce((e: DiagnosticChangeEvent) => {
-				onChangedDiagnostics(e);
+				onChangedDiagnostics(e.uris);
 			}, delayMs));
 		} else if ($config.delayMode === 'new') {
 			newDelay?.dispose();
@@ -107,7 +144,7 @@ export function updateChangeDiagnosticListener(): void {
 		}
 	} else {
 		// No delay
-		onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnostics);
+		onDidChangeDiagnosticsDisposable = languages.onDidChangeDiagnostics(onChangedDiagnosticsCoalesced);
 	}
 }
 /**
@@ -229,6 +266,17 @@ export function updateOnSaveListener(): void {
 	});
 }
 
+/**
+ * Update listener for when a document is closed (drops its cached state).
+ */
+export function updateCloseTextDocumentListener(): void {
+	onDidCloseTextDocumentDisposable?.dispose();
+
+	onDidCloseTextDocumentDisposable = workspace.onDidCloseTextDocument(document => {
+		extUtils.clearMergeConflictCache(document);
+	});
+}
+
 export function updateChangeBreakpointsListener(): void {
 	onDidChangeBreakpoints?.dispose();
 
@@ -251,5 +299,8 @@ export function disposeAllEventListeners(): void {
 	updateViewportLimitedEditorsThrottled.cancel();
 	onDidSaveTextDocumentDisposable?.dispose();
 	onDidChangeTextDocumentForOnSaveDisposable?.dispose();
+	onDidCloseTextDocumentDisposable?.dispose();
 	newDelay?.dispose();
+	disposePendingDiagnostics();
+	extUtils.clearMergeConflictCache();
 }
