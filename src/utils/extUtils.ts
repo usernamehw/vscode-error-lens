@@ -320,44 +320,49 @@ export const extUtils = {
 			// When default template - no need to use RegExps or other stuff.
 			return message;
 		} else {
+			let result = template;
+			/**
+			 * Count, source & code can be absent.
+			 * If present - replace them as simple string.
+			 * If absent - remove them along with adjacent non-whitespace decorations (like the brackets in `[$code]`).
+			 *
+			 * Absent variables are removed before present ones are substituted,
+			 * while the other `$variables` are still literal template tokens.
+			 * Otherwise the RegExp could also remove already-substituted text (see #216).
+			 * The RegExp only strips punctuation around the variable -
+			 * it never touches other `$variables` or the surrounding words.
+			 */
+
+			/* eslint-disable prefer-named-capture-group, max-params */
+			if (template.includes(TemplateVars.Count) && count <= 1) {
+				// no `$count` in the template - remove it
+				result = result.replace(/(\s*?)?([^\s$\w]*?)?(\$count)([^\s$\w]*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? '')).replace(TemplateVars.Count, '');
+			}
+			if (template.includes(TemplateVars.Source) && !diagnostic.source) {
+				result = result.replace(/(\s*?)?([^\s$\w]*?)?(\$source)([^\s$\w]*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? '')).replace(TemplateVars.Source, '');
+			}
+			if (template.includes(TemplateVars.Code) && !diagnostic.code) {
+				result = result.replace(/(\s*?)?([^\s$\w]*?)?(\$code)([^\s$\w]*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? '')).replace(TemplateVars.Code, '');
+			}
+
+			if (template.includes(TemplateVars.Count) && count > 1) {
+				result = result.replace(TemplateVars.Count, String(count));
+			}
+			if (template.includes(TemplateVars.Source) && diagnostic.source) {
+				result = result.replace(TemplateVars.Source, String(diagnostic.source));
+			}
+			if (template.includes(TemplateVars.Code) && diagnostic.code) {
+				const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
+				result = result.replace(TemplateVars.Code, code);
+			}
+			/* eslint-enable prefer-named-capture-group, max-params */
+
 			// Message & severity is always present.
-			let result = template
+			result = result
 				.replace(TemplateVars.Message, message)
 				.replace(TemplateVars.Severity, $config.severityText[diagnostic.severity] || '')
 				.replace(TemplateVars.LineStart, String(diagnostic.range.start.line + 1))
 				.replace(TemplateVars.LineEnd, String(diagnostic.range.end.line + 1));
-			/**
-			 * Count, source & code can be absent.
-			 * If present - replace them as simple string.
-			 * If absent - replace by RegExp removing all adjacent non-whitespace symbols with them.
-			 */
-
-			/* eslint-disable prefer-named-capture-group, max-params */
-			if (template.includes(TemplateVars.Count)) {
-				if (count > 1) {
-					result = result.replace(TemplateVars.Count, String(count));
-				} else {
-					// no `$count` in the template - remove it
-					result = result.replace(/(\s*?)?(\S*?)?(\$count)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-				}
-			}
-			if (template.includes(TemplateVars.Source)) {
-				if (diagnostic.source) {
-					result = result.replace(TemplateVars.Source, String(diagnostic.source));
-				} else {
-					result = result.replace(/(\s*?)?(\S*?)?(\$source)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-				}
-			}
-
-			if (template.includes(TemplateVars.Code)) {
-				const code = typeof diagnostic.code === 'object' ? String(diagnostic.code.value) : String(diagnostic.code);
-				if (diagnostic.code) {
-					result = result.replace(TemplateVars.Code, code);
-				} else {
-					result = result.replace(/(\s*?)?(\S*?)?(\$code)(\S*?)?(\s*?)?/u, (match, g1: string | undefined, g2, g3, g4, g5: string | undefined) => (g1 ?? '') + (g5 ?? ''));
-				}
-			}
-			/* eslint-enable prefer-named-capture-group, max-params */
 
 			return result;
 		}
