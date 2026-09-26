@@ -195,7 +195,7 @@
 						"900"
 					],
 					"default": "normal",
-					"markdownDescription": "Font weight of inline message. `\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
+					"markdownDescription": "Font weight of inline message. (`\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
@@ -759,7 +759,7 @@
 							}
 						]
 					},
-					"markdownDescription": "Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions (use object instead of a string)."
+					"markdownDescription": "Exclude diagnostics by message. Excludes when the diagnostic message contains the excluding string (case-insensitive). Can use Regular Expressions (use object instead of a string)."
 				},
 				"errorLens.excludeBySource": {
 					"type": "array",
