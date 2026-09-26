@@ -9,7 +9,6 @@
 		"types": [
 			"node"
 		],
-		"baseUrl": ".",
 		"paths": {
 			"src/*": [
 			  "./src/*"
