@@ -64,7 +64,7 @@ const documentsNotifiedAboutViewportLimit = new Set<string>();
  * Lines kept on each side of a visible range, so that short scrolls stay within
  * the already rendered messages.
  */
-const viewportLineBuffer = 20;
+const viewportLineBuffer = 100;
 
 /**
  * Update all decoration styles: editor, gutter, status bar
