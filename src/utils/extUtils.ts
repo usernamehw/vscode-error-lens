@@ -2,9 +2,15 @@ import { $config, $state } from 'src/extension';
 import { transmuteSeverity } from 'src/transmute';
 import { Constants, type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
-import { languages, window, workspace, type Diagnostic, type TextEditor, type TextLine, type Uri } from 'vscode';
+import { languages, window, workspace, type Diagnostic, type TextDocument, type TextEditor, type TextLine, type Uri } from 'vscode';
 
 export type GroupedByLineDiagnostics = Record<string, Diagnostic[]>;
+
+/**
+ * Scanning the entire document text is expensive on big files, so the result is kept
+ * until the document changes. Entries are dropped when the document closes.
+ */
+const mergeConflictCache = new Map<string, { version: number; hasMergeConflict: boolean }>();
 
 interface PrepareMessageArg {
 	template: string;
@@ -195,15 +201,8 @@ export const extUtils = {
 			return 'excludeAndClearDecorations';
 		}
 
-		if (!$config.enabledInMergeConflict) {
-			const editorText = editor.document.getText();
-			if (
-				editorText.includes(Constants.MergeConflictSymbol1) ||
-			editorText.includes(Constants.MergeConflictSymbol2) ||
-			editorText.includes(Constants.MergeConflictSymbol3)
-			) {
-				return 'excludeAndClearDecorations';
-			}
+		if (!$config.enabledInMergeConflict && extUtils.hasMergeConflict(editor.document)) {
+			return 'excludeAndClearDecorations';
 		}
 
 		if ($state.excludePatterns) {
@@ -223,6 +222,35 @@ export const extUtils = {
 		}
 
 		return 'doNotExclude';
+	},
+	hasMergeConflict(document: TextDocument): boolean {
+		const key = document.uri.toString();
+		const cached = mergeConflictCache.get(key);
+		if (cached?.version === document.version) {
+			return cached.hasMergeConflict;
+		}
+
+		const documentText = document.getText();
+		const hasMergeConflict = documentText.includes(Constants.MergeConflictSymbol1) ||
+			documentText.includes(Constants.MergeConflictSymbol2) ||
+			documentText.includes(Constants.MergeConflictSymbol3);
+
+		mergeConflictCache.set(key, {
+			version: document.version,
+			hasMergeConflict,
+		});
+
+		return hasMergeConflict;
+	},
+	/**
+	 * Drop cached merge conflict scan for one document (or for all of them).
+	 */
+	clearMergeConflictCache(document?: TextDocument): void {
+		if (document) {
+			mergeConflictCache.delete(document.uri.toString());
+		} else {
+			mergeConflictCache.clear();
+		}
 	},
 	/**
 	 * `true` when diagnostic enabled in config & in temp variable
