@@ -60,7 +60,7 @@ export function createHoverForDiagnostic({
 		const copyMessageButton = vscodeUtils.createButtonLinkMarkdown({
 			text: '$(clippy) Copy message',
 			href: vscodeUtils.createCommandUri(CommandId.CopyProblemMessage, diagnostic.message ?? '').toString(),
-			title: 'Copy problem mesage into the clipboard.',
+			title: 'Copy problem message into the clipboard.',
 		});
 		markdown.appendMarkdown('\n\n');
 		markdown.appendMarkdown(`${diagnostic.source ?? '<No source>'}(\`${diagnosticCode ?? '<No code>'}\`) `);

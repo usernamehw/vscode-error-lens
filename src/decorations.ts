@@ -145,7 +145,7 @@ export function setDecorationStyle(context: ExtensionContext): void {
 
 	// Both "line" & "message" have colors with transparency by default.
 	// This section honours `messageBackgroundMode` setting and removes colors
-	// so that message & line backgrounds woudn't mix(overlap).
+	// so that message & line backgrounds wouldn't mix(overlap).
 	if ($config.messageBackgroundMode === 'line') {
 		errorMessageBackground = undefined;
 		warningMessageBackground = undefined;
