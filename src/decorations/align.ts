@@ -17,10 +17,10 @@ function getMarginForAlignment({ start, end, message, minimumMargin, padding, vi
 		margin = start <= visualLineLength ? 0 : start - visualLineLength;
 	} else if (end) {
 		const charDiff = end - message.length - visualLineLength - (padding[1] * 2);
-		margin = charDiff < 0 ? 0 : charDiff;
+		margin = Math.max(0, charDiff);
 	}
 
-	return margin < minimumMargin ? minimumMargin : margin;
+	return Math.max(minimumMargin, margin);
 }
 
 interface AlignmentArgs {
@@ -88,7 +88,7 @@ export function getStyleForAlignment({
 			textLine.range.start.line,
 			textLine.range.end.character,
 		);
-		styleStr = `margin:0 0 0 ${marginChar >= 0 ? marginChar : 0}ch;padding:${padding[0]}ch ${padding[1]}ch`;
+		styleStr = `margin:0 0 0 ${Math.max(0, marginChar)}ch;padding:${padding[0]}ch ${padding[1]}ch`;
 	}
 
 	return {
