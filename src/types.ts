@@ -133,7 +133,7 @@ interface ExtensionConfigType {
 		decoration: DecorationRenderOptions;
 	}>;
 	/**
-	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions (use object instead of a string).
+	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the excluding string(case-insensitive). Can use Regular Expressions (use object instead of a string).
 	 */
 	excludeByMessage: (string | { regex: string; flags: string })[];
 	/**

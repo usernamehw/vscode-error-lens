@@ -52,7 +52,7 @@ export abstract class $state {
 	}[] = undefined;
 
 	/**
-	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions.
+	 * Exclude diagnostics by message. Excludes when the diagnostic message contains the excluding string(case-insensitive). Can use Regular Expressions.
 	 */
 	static excludeByMessage: { strings: string[]; regexps: RegExp[] } = {
 		strings: [],
@@ -243,7 +243,7 @@ function updateExcludeState(): void {
 		}
 	}
 
-	// ──── Exlude by glob ────────────────────────────────────────
+	// ──── Exclude by glob ────────────────────────────────────────
 	if (Array.isArray($config.excludePatterns) && $config.excludePatterns.length !== 0) {
 		$state.excludePatterns = $config.excludePatterns.map(item => ({
 			pattern: item,
