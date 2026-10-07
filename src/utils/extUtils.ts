@@ -1,6 +1,6 @@
 import { $config, $state } from 'src/extension';
 import { transmuteSeverity } from 'src/transmute';
-import { Constants, type DiagnosticTarget } from 'src/types';
+import { type DiagnosticTarget } from 'src/types';
 import { utils } from 'src/utils/utils';
 import { languages, window, workspace, type Diagnostic, type TextDocument, type TextEditor, type TextLine, type Uri } from 'vscode';
 
@@ -230,10 +230,14 @@ export const extUtils = {
 			return cached.hasMergeConflict;
 		}
 
+		const mergeConflictSymbol1 = '<<<<<<<';
+		const mergeConflictSymbol2 = '=======';
+		const mergeConflictSymbol3 = '>>>>>>>';
+
 		const documentText = document.getText();
-		const hasMergeConflict = documentText.includes(Constants.MergeConflictSymbol1) ||
-			documentText.includes(Constants.MergeConflictSymbol2) ||
-			documentText.includes(Constants.MergeConflictSymbol3);
+		const hasMergeConflict = documentText.includes(mergeConflictSymbol1) ||
+			documentText.includes(mergeConflictSymbol2) ||
+			documentText.includes(mergeConflictSymbol3);
 
 		mergeConflictCache.set(key, {
 			version: document.version,

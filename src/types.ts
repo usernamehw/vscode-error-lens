@@ -406,10 +406,6 @@ export const enum Constants {
 
 	VscodeOpenCommandId = 'vscode.open',
 
-	MergeConflictSymbol1 = '<<<<<<<',
-	MergeConflictSymbol2 = '=======',
-	MergeConflictSymbol3 = '>>>>>>>',
-
 	NonBreakingSpaceSymbolHtml = '&nbsp;',
 	NonBreakingSpaceSymbol = '⠀',
 
