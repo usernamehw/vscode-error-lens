@@ -123,11 +123,23 @@ export function setTransmutedDecorationStyle(renderOptions: typeof decorationRen
 	transmutedDecorationTypes = newTransmutedDecorationTypes;
 }
 
+/**
+ * Decoration options paired with the problem they were created from.
+ *
+ * The diagnostic is only used inside the extension host (to match against
+ * `"errorLens.transmute"` targets) and must stay out of the render options
+ * that reach the renderer.
+ */
+export interface DecorationWithDiagnostic {
+	options: DecorationOptions;
+	diagnostic: Diagnostic;
+}
+
 interface TransmuteArgs {
-	decorationOptionsError: DecorationOptions[];
-	decorationOptionsWarning: DecorationOptions[];
-	decorationOptionsInfo: DecorationOptions[];
-	decorationOptionsHint: DecorationOptions[];
+	decorationsError: DecorationWithDiagnostic[];
+	decorationsWarning: DecorationWithDiagnostic[];
+	decorationsInfo: DecorationWithDiagnostic[];
+	decorationsHint: DecorationWithDiagnostic[];
 	decorationRenderBase: typeof decorationRenderOptions;
 }
 
@@ -148,24 +160,16 @@ interface TransmuteReturn {
 	};
 }
 
-interface TransmuteArgs {
-	decorationOptionsError: DecorationOptions[];
-	decorationOptionsWarning: DecorationOptions[];
-	decorationOptionsInfo: DecorationOptions[];
-	decorationOptionsHint: DecorationOptions[];
-	decorationRenderBase: typeof decorationRenderOptions;
-}
-
 /**
  * Change decorations according to `"errorLens.transmute"` setting.
  *
  * Return decoration options with matched decorations removed and separately an array of transmuted decorations.
  */
 export function transmute({
-	decorationOptionsError,
-	decorationOptionsWarning,
-	decorationOptionsInfo,
-	decorationOptionsHint,
+	decorationsError,
+	decorationsWarning,
+	decorationsInfo,
+	decorationsHint,
 	decorationRenderBase,
 }: TransmuteArgs): TransmuteReturn {
 	const result: TransmuteReturn = {
@@ -178,83 +182,111 @@ export function transmute({
 		transmuted: initTransmuteObject($config.transmute),
 	};
 
-	for (const transmuteId in $config.transmute) {
-		const transmuteItem = $config.transmute[transmuteId];
+	for (const decoration of decorationsError) {
+		let isTransmuted = false;
 
-		for (const decoration of decorationOptionsError) {
-			// @ts-ignore
-			if (targetMatchesProblem(transmuteItem, decoration.renderOptions?.after!.problem as Diagnostic)) {
+		for (const transmuteId in $config.transmute) {
+			const transmuteItem = $config.transmute[transmuteId];
+
+			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
 				result.transmuted[transmuteId].error.push({
-					range: decoration.range,
+					range: decoration.options.range,
 					renderOptions: {
 						...decorationRenderBase.error,
 						...transmuteItem.decoration,
-						...decoration.renderOptions,
+						...decoration.options.renderOptions,
 						after: {
-							contentText: decoration.renderOptions?.after?.contentText,
+							contentText: decoration.options.renderOptions?.after?.contentText,
 						},
 					},
 				});
-			} else {
-				result.nonTransmuted.error.push(decoration);
+				isTransmuted = true;
 			}
 		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationOptionsWarning) {
-			// @ts-ignore
-			if (targetMatchesProblem(transmuteItem, decoration.renderOptions?.after!.problem as Diagnostic)) {
+
+		if (!isTransmuted) {
+			result.nonTransmuted.error.push(decoration.options);
+		}
+	}
+	// ────────────────────────────────────────────────────────────
+	for (const decoration of decorationsWarning) {
+		let isTransmuted = false;
+
+		for (const transmuteId in $config.transmute) {
+			const transmuteItem = $config.transmute[transmuteId];
+
+			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
 				result.transmuted[transmuteId].warning.push({
-					range: decoration.range,
+					range: decoration.options.range,
 					renderOptions: {
 						...decorationRenderBase.warning,
 						...transmuteItem.decoration,
-						...decoration.renderOptions,
+						...decoration.options.renderOptions,
 						after: {
-							contentText: decoration.renderOptions?.after?.contentText,
+							contentText: decoration.options.renderOptions?.after?.contentText,
 						},
 					},
 				});
-			} else {
-				result.nonTransmuted.warning.push(decoration);
+				isTransmuted = true;
 			}
 		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationOptionsInfo) {
-			// @ts-ignore
-			if (targetMatchesProblem(transmuteItem, decoration.renderOptions?.after!.problem as Diagnostic)) {
+
+		if (!isTransmuted) {
+			result.nonTransmuted.warning.push(decoration.options);
+		}
+	}
+	// ────────────────────────────────────────────────────────────
+	for (const decoration of decorationsInfo) {
+		let isTransmuted = false;
+
+		for (const transmuteId in $config.transmute) {
+			const transmuteItem = $config.transmute[transmuteId];
+
+			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
 				result.transmuted[transmuteId].info.push({
-					range: decoration.range,
+					range: decoration.options.range,
 					renderOptions: {
 						...decorationRenderBase.info,
 						...transmuteItem.decoration,
-						...decoration.renderOptions,
+						...decoration.options.renderOptions,
 						after: {
-							contentText: decoration.renderOptions?.after?.contentText,
+							contentText: decoration.options.renderOptions?.after?.contentText,
 						},
 					},
 				});
-			} else {
-				result.nonTransmuted.info.push(decoration);
+				isTransmuted = true;
 			}
 		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationOptionsHint) {
-			// @ts-ignore
-			if (targetMatchesProblem(transmuteItem, decoration.renderOptions?.after!.problem as Diagnostic)) {
+
+		if (!isTransmuted) {
+			result.nonTransmuted.info.push(decoration.options);
+		}
+	}
+	// ────────────────────────────────────────────────────────────
+	for (const decoration of decorationsHint) {
+		let isTransmuted = false;
+
+		for (const transmuteId in $config.transmute) {
+			const transmuteItem = $config.transmute[transmuteId];
+
+			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
 				result.transmuted[transmuteId].hint.push({
-					range: decoration.range,
+					range: decoration.options.range,
 					renderOptions: {
 						...decorationRenderBase.hint,
 						...transmuteItem.decoration,
-						...decoration.renderOptions,
+						...decoration.options.renderOptions,
 						after: {
-							contentText: decoration.renderOptions?.after?.contentText,
+							contentText: decoration.options.renderOptions?.after?.contentText,
 						},
 					},
 				});
-			} else {
-				result.nonTransmuted.hint.push(decoration);
+				isTransmuted = true;
 			}
+		}
+
+		if (!isTransmuted) {
+			result.nonTransmuted.hint.push(decoration.options);
 		}
 	}
 
