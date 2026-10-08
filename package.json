@@ -2,7 +2,7 @@
 	"name": "errorlens",
 	"displayName": "Error Lens",
 	"description": "Improve highlighting of errors, warnings and other language diagnostics.",
-	"version": "3.28.0",
+	"version": "3.29.0",
 	"publisher": "usernamehw",
 	"license": "MIT",
 	"engines": {
@@ -87,6 +87,18 @@
 				"command": "errorLens.selectProblem",
 				"title": "Select Problem",
 				"description": "Set editor selection to the problem range (controlled by `errorLens.selectProblemType` setting).",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.nextProblem",
+				"title": "Go to Next Problem",
+				"description": "Move cursor to the next problem. Supports args {\"scope\": \"file\" | \"allFiles\", \"sortOrder\": \"problem\" | \"problemBySeverity\", \"diagnosticSeverity\": [\"error\" | \"warning\" | \"info\" | \"hint\"]}",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.prevProblem",
+				"title": "Go to Previous Problem",
+				"description": "Move cursor to the previous problem. Supports args {\"scope\": \"file\" | \"allFiles\", \"sortOrder\": \"problem\" | \"problemBySeverity\", \"diagnosticSeverity\": [\"error\" | \"warning\" | \"info\" | \"hint\"]}",
 				"category": "Error Lens"
 			},
 			{
@@ -195,7 +207,7 @@
 						"900"
 					],
 					"default": "normal",
-					"markdownDescription": "Font weight of inline message. `\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
+					"markdownDescription": "Font weight of inline message. (`\"normal\"` is alias for 400, `\"bold\"` is alias for 700). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensfontweight)"
 				},
 				"errorLens.fontStyleItalic": {
 					"type": "boolean",
@@ -328,6 +340,12 @@
 					"default": 500,
 					"minimum": 0,
 					"markdownDescription": "Cut off inline message if it's longer than this value. (Improves performance when the diagnostic message is long). [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlensmessagemaxchars)"
+				},
+				"errorLens.maxInlineMessages": {
+					"type": "integer",
+					"default": 1000,
+					"minimum": 0,
+					"markdownDescription": "Limit inline messages to the lines currently visible in the editor when a file has more lines with problems than this value. VSCode creates a separate set of CSS rules for every distinct inline message, so a file with thousands of problems can freeze the editor for a long time. Line highlighting, gutter icons, problem range decorations, hovers and status bar are not affected. `0` - no limit."
 				},
 				"errorLens.severityText": {
 					"type": "array",
@@ -722,7 +740,7 @@
 							}
 						}
 					},
-					"markdownDescription": "Change editor decoration for specific problems (only severity for now)."
+					"markdownDescription": "Change severity or editor decoration for specific problems. [demo](https://github.com/usernamehw/vscode-error-lens/blob/master/docs/docs.md#errorlenstransmute)"
 				},
 				"errorLens.excludeByMessage": {
 					"type": "array",
@@ -753,7 +771,7 @@
 							}
 						]
 					},
-					"markdownDescription": "Exclude diagnostics by message. Excludes when the diagnostic message contains the exlcuding string(case-insensitive). Can use Regular Expressions (use object instead of a string)."
+					"markdownDescription": "Exclude diagnostics by message. Excludes when the diagnostic message contains the excluding string (case-insensitive). Can use Regular Expressions (use object instead of a string)."
 				},
 				"errorLens.excludeBySource": {
 					"type": "array",
@@ -761,7 +779,7 @@
 					"items": {
 						"type": "string"
 					},
-					"markdownDescription": "Specify `source` or `source(code)` pair to exclude. Examples: \n\n```json\n[\n\t\"eslint\",// exclude all problems from eslint linter\n\t\"eslint(padded-blocks)\",// exclude padded-blocks rule from eslint linter\n\t\"Pylance(reportUndefinedVariable)\",// exlude reportUndefinedVariable rule from Pylance linter\n]\n```"
+					"markdownDescription": "Specify `source` or `source(code)` pair to exclude. Examples: \n\n```json\n[\n\t\"eslint\",// exclude all problems from eslint linter\n\t\"eslint(padded-blocks)\",// exclude padded-blocks rule from eslint linter\n\t\"Pylance(reportUndefinedVariable)\",// exclude reportUndefinedVariable rule from Pylance linter\n]\n```"
 				},
 				"errorLens.excludePatterns": {
 					"type": "array",
@@ -1470,18 +1488,18 @@
 	},
 	"devDependencies": {
 		"@soda/friendly-errors-webpack-plugin": "^1.8.1",
-		"@types/lodash": "^4.17.16",
-		"@types/node": "^22.19.3",
+		"@types/lodash": "^4.17.25",
+		"@types/node": "^22.20.4",
 		"@types/vscode": "^1.107.0",
 		"@typescript-eslint/eslint-plugin": "^5.62.0",
 		"@typescript-eslint/parser": "^5.62.0",
 		"eslint": "^8.57.1",
-		"ts-loader": "^9.5.2",
-		"typescript": "^5.8.2",
-		"webpack": "^5.98.0",
+		"ts-loader": "^9.6.2",
+		"typescript": "^6.0.3",
+		"webpack": "^5.111.1",
 		"webpack-cli": "^6.0.1"
 	},
 	"dependencies": {
-		"lodash": "^4.17.21"
+		"lodash": "^4.18.1"
 	}
 }
