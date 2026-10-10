@@ -182,33 +182,31 @@ export function transmute({
 		transmuted: initTransmuteObject($config.transmute),
 	};
 
-	for (const transmuteId in $config.transmute) {
-		const transmuteItem = $config.transmute[transmuteId];
+	for (const [severity, decorations] of [
+		['error', decorationsError],
+		['warning', decorationsWarning],
+		['info', decorationsInfo],
+		['hint', decorationsHint],
+	] as const) {
+		for (const decoration of decorations) {
+			let matchedTransmuteId: string | undefined;
 
-		for (const decoration of decorationsError) {
-			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
-				result.transmuted[transmuteId].error.push({
-					range: decoration.options.range,
-					renderOptions: {
-						...decorationRenderBase.error,
-						...transmuteItem.decoration,
-						...decoration.options.renderOptions,
-						after: {
-							contentText: decoration.options.renderOptions?.after?.contentText,
-						},
-					},
-				});
-			} else {
-				result.nonTransmuted.error.push(decoration.options);
+			for (const transmuteId in $config.transmute) {
+				if (targetMatchesProblem($config.transmute[transmuteId], decoration.diagnostic)) {
+					matchedTransmuteId = transmuteId;
+					break;
+				}
 			}
-		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationsWarning) {
-			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
-				result.transmuted[transmuteId].warning.push({
+
+			if (matchedTransmuteId === undefined) {
+				result.nonTransmuted[severity].push(decoration.options);
+			} else {
+				const transmuteItem = $config.transmute[matchedTransmuteId];
+
+				result.transmuted[matchedTransmuteId][severity].push({
 					range: decoration.options.range,
 					renderOptions: {
-						...decorationRenderBase.warning,
+						...decorationRenderBase[severity],
 						...transmuteItem.decoration,
 						...decoration.options.renderOptions,
 						after: {
@@ -216,44 +214,6 @@ export function transmute({
 						},
 					},
 				});
-			} else {
-				result.nonTransmuted.warning.push(decoration.options);
-			}
-		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationsInfo) {
-			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
-				result.transmuted[transmuteId].info.push({
-					range: decoration.options.range,
-					renderOptions: {
-						...decorationRenderBase.info,
-						...transmuteItem.decoration,
-						...decoration.options.renderOptions,
-						after: {
-							contentText: decoration.options.renderOptions?.after?.contentText,
-						},
-					},
-				});
-			} else {
-				result.nonTransmuted.info.push(decoration.options);
-			}
-		}
-		// ────────────────────────────────────────────────────────────
-		for (const decoration of decorationsHint) {
-			if (targetMatchesProblem(transmuteItem, decoration.diagnostic)) {
-				result.transmuted[transmuteId].hint.push({
-					range: decoration.options.range,
-					renderOptions: {
-						...decorationRenderBase.hint,
-						...transmuteItem.decoration,
-						...decoration.options.renderOptions,
-						after: {
-							contentText: decoration.options.renderOptions?.after?.contentText,
-						},
-					},
-				});
-			} else {
-				result.nonTransmuted.hint.push(decoration.options);
 			}
 		}
 	}
