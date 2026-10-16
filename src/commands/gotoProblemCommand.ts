@@ -128,10 +128,25 @@ async function gotoProblem(editor: TextEditor, args: GotoProblemArgs | undefined
 		entries.sort(compareByDocumentOrder);
 	}
 
+	// Diagnostics that share the same range (duplicated messages, e.g. reported
+	// by several linters) are a single navigation stop: stepping between them
+	// would leave the cursor visibly unmoved, and the position-based cycle below
+	// could never advance past them.
+	const seenRanges = new Set<string>();
+	entries = entries.filter(entry => {
+		const key = `${entry.uri.toString()}|${entry.diagnostic.range.start.line}:${entry.diagnostic.range.start.character}` +
+			`-${entry.diagnostic.range.end.line}:${entry.diagnostic.range.end.character}`;
+		if (seenRanges.has(key)) {
+			return false;
+		}
+		seenRanges.add(key);
+		return true;
+	});
+
 	const cursor = editor.selection.active;
 	const activeUri = editor.document.uri;
 
-	let targetIndex = entries.findIndex(entry => entry.diagnostic.range.contains(cursor));
+	let targetIndex = entries.findIndex(entry => compareUris(entry.uri, activeUri) === 0 && entry.diagnostic.range.contains(cursor));
 	if (targetIndex !== -1) {
 		// Cursor is on a problem: advance within the cycle (wraps around).
 		targetIndex = (targetIndex + direction + entries.length) % entries.length;
