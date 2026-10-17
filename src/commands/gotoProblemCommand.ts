@@ -146,7 +146,23 @@ async function gotoProblem(editor: TextEditor, args: GotoProblemArgs | undefined
 	const cursor = editor.selection.active;
 	const activeUri = editor.document.uri;
 
-	let targetIndex = entries.findIndex(entry => compareUris(entry.uri, activeUri) === 0 && entry.diagnostic.range.contains(cursor));
+	// If the selection exactly matches a problem's range, the cursor was put
+	// there by revealProblem (it selects the whole range). This identifies the
+	// current stop unambiguously, even when ranges overlap or share endpoints
+	// (e.g. a zero-length ESLint range sitting at the end of a TypeScript
+	// diagnostic's range): a position-based lookup would match the earliest
+	// entry containing the cursor and the cycle could never advance past the
+	// overlap.
+	const selection = editor.selection;
+	function isCurrentStop(entry: ProblemEntry): boolean {
+		return compareUris(entry.uri, activeUri) === 0 &&
+			entry.diagnostic.range.start.isEqual(selection.anchor) &&
+			entry.diagnostic.range.end.isEqual(selection.active);
+	}
+	let targetIndex = entries.findIndex(isCurrentStop);
+	if (targetIndex === -1) {
+		targetIndex = entries.findIndex(entry => compareUris(entry.uri, activeUri) === 0 && entry.diagnostic.range.contains(cursor));
+	}
 	if (targetIndex !== -1) {
 		// Cursor is on a problem: advance within the cycle (wraps around).
 		targetIndex = (targetIndex + direction + entries.length) % entries.length;
