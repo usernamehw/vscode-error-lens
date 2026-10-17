@@ -90,6 +90,18 @@
 				"category": "Error Lens"
 			},
 			{
+				"command": "errorLens.nextProblem",
+				"title": "Go to Next Problem",
+				"description": "Move cursor to the next problem. Supports args {\"scope\": \"file\" | \"allFiles\", \"sortOrder\": \"problem\" | \"problemBySeverity\", \"diagnosticSeverity\": [\"error\" | \"warning\" | \"info\" | \"hint\"]}",
+				"category": "Error Lens"
+			},
+			{
+				"command": "errorLens.prevProblem",
+				"title": "Go to Previous Problem",
+				"description": "Move cursor to the previous problem. Supports args {\"scope\": \"file\" | \"allFiles\", \"sortOrder\": \"problem\" | \"problemBySeverity\", \"diagnosticSeverity\": [\"error\" | \"warning\" | \"info\" | \"hint\"]}",
+				"category": "Error Lens"
+			},
+			{
 				"command": "errorlens.toggleWorkspace",
 				"title": "Toggle Workspace in Disabled List",
 				"description": "Exclude/Include current workspace by fs path.",
