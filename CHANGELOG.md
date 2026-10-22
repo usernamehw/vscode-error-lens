@@ -1,3 +1,8 @@
+## 3.30.0 `22 Oct 2026`
+
+- ✨ Add `errorLens.nextProblem` and `errorLens.prevProblem` commands [PR 280](https://github.com/usernamehw/vscode-error-lens/pull/280) by [sripal2013](https://github.com/sripal2013)
+- 🐛 Fix transmute duplicating inline messages [PR 282](https://github.com/usernamehw/vscode-error-lens/pull/282) by [NYDJustin](https://github.com/NYDJustin)
+
 ## 3.29.0 `26 Sep 2026`
 
 - ⚡perf: Render diagnostics only for visible lines when there are many problems in 1 file (>1000) [PR 274](https://github.com/usernamehw/vscode-error-lens/pull/274) by [edusperoni](https://github.com/edusperoni)
